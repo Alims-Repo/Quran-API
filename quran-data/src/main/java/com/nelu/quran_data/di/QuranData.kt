@@ -1,16 +1,20 @@
 package com.nelu.quran_data.di
 
 import android.app.Application
+import com.nelu.quran_data.data.repo.RepositoryIndex
 import com.nelu.quran_data.data.repo.RepositoryJuz
 import com.nelu.quran_data.data.repo.RepositoryPage
 import com.nelu.quran_data.data.repo.RepositoryQuran
 import com.nelu.quran_data.data.repo.RepositorySurah
 import com.nelu.quran_data.data.repo.RepositoryTranslations
+import com.nelu.quran_data.data.repo.base.BaseIndex
 import com.nelu.quran_data.data.repo.base.BaseJuz
 import com.nelu.quran_data.data.repo.base.BasePage
 import com.nelu.quran_data.data.repo.base.BaseQuran
 import com.nelu.quran_data.data.repo.base.BaseSurah
 import com.nelu.quran_data.data.repo.base.BaseTranslations
+import com.nelu.quran_data.utils.parser.IndexParser
+import com.nelu.quran_data.utils.parser.QuranInfoParser
 
 /**
  * Singleton object `QuranData` serves as a centralized source for accessing
@@ -32,13 +36,14 @@ object QuranData : BaseData {
 
     lateinit var context: Application
 
+    private var baseIndex: BaseIndex? = null
     private var baseSurah: BaseSurah? = null
     private var baseJuz: BaseJuz? = null
     private var basePage: BasePage? = null
     private var baseTranslations: BaseTranslations? = null
     private var baseQuran: BaseQuran? = null
 
-
+    override val index: BaseIndex get() = baseIndex!!
     override val surah: BaseSurah get() = baseSurah!!
     override val juz: BaseJuz get() = baseJuz!!
     override val page: BasePage get() = basePage!!
@@ -62,12 +67,15 @@ object QuranData : BaseData {
      */
     fun init(context: Application) {
         this.context = context
-        baseSurah = RepositorySurah()
         basePage = RepositoryPage()
-        baseJuz = RepositoryJuz(surah)
+        baseJuz = RepositoryJuz()
+        baseSurah = RepositorySurah()
+        baseIndex = RepositoryIndex()
         baseTranslations = RepositoryTranslations()
-        baseQuran = RepositoryQuran()
+        baseQuran = RepositoryQuran(juz, page, surah)
 
         // Preload Data
+        IndexParser.readInfo()
+        QuranInfoParser.readQuran()
     }
 }

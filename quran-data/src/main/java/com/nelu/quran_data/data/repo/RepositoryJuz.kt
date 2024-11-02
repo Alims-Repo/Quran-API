@@ -1,19 +1,19 @@
 package com.nelu.quran_data.data.repo
 
+import android.util.Log
 import com.nelu.quran_data.data.model.ModelJuz
 import com.nelu.quran_data.data.model.ModelJuz.Companion.toJuz
 import com.nelu.quran_data.data.model.ModelJuz.Companion.toJuzList
 import com.nelu.quran_data.data.repo.base.BaseJuz
 import com.nelu.quran_data.data.repo.base.BaseSurah
+import com.nelu.quran_data.di.QuranData
 import com.nelu.quran_data.utils.parser.JuzInfoParser.readJuzInfo
 import org.json.JSONArray
 
-class RepositoryJuz(
-    private val baseSurah: BaseSurah
-) : BaseJuz {
+class RepositoryJuz : BaseJuz {
 
     override fun getJuzInfo(): List<ModelJuz> {
-        return readJuzInfo() //JSONArray(Juz.json).toJuzList()
+        return readJuzInfo()
     }
 
     override fun getJuzInfo(number: Int): ModelJuz? {
@@ -29,10 +29,11 @@ class RepositoryJuz(
     }
 
     override fun getJuzBySurah(surah: Int): List<ModelJuz> {
-        baseSurah.getSurahInfo(surah)?.numberOfAyahs
-        return getJuzInfo().filter { juz ->
-            juz.startSurah <= surah && surah < (juz.startId + juz.totalAyah)
-        }
+        return QuranData.surah.getSurahInfo(surah)?.run {
+            getJuzInfo().filter { juz ->
+                (juz.startId + juz.totalAyah) > startId && juz.startId < (startId + numberOfAyahs)
+            }
+        } ?: emptyList()
     }
 
     override fun getJuzBySurahAndAyah(surah: Int, ayah: Int): ModelJuz? {

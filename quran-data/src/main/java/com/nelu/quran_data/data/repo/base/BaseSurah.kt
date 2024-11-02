@@ -12,9 +12,9 @@ interface BaseSurah {
     fun getSurahInfo(query: String): List<ModelSurah>
 
     // Complex API for Surah
-    fun getSurahInfoByID(ayahId: Int): ModelSurah?
+    fun getSurahInfoByAyah(ayahId: Int): ModelSurah?
 
-    fun getSurahInfoByPage(ayahId: Int): ModelSurah?
+    fun getSurahInfoByPage(pageNo: Int): List<ModelSurah>
 
-    fun getSurahInfoByJuz(ayahId: Int): ModelSurah?
+    fun getSurahInfoByJuz(juzNo: Int): List<ModelSurah>
 }

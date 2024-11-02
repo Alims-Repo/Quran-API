@@ -10,7 +10,7 @@ interface BaseQuran {
 
     fun getQuranDataJuz(juz: Int): List<ModelQuranData>
 
-    fun getQuranDataAyah(surah: Int, ayah: Int): ModelQuranData
+    fun getQuranDataAyah(surah: Int, ayah: Int): ModelQuranData?
 
     fun searchQuranData(query: String): List<ModelQuranData>
 

@@ -4,6 +4,7 @@ import com.nelu.quran_data.data.model.ModelTranslationInfo
 import com.nelu.quran_data.data.repo.base.BaseTranslations
 
 class RepositoryTranslations : BaseTranslations {
+
     override fun getTranslationList(): List<ModelTranslationInfo> {
         TODO("Not yet implemented")
     }

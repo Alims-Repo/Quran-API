@@ -7,8 +7,11 @@ import com.nelu.quran_data.di.QuranData.context
 
 object SurahInfoParser {
 
+    private val modelSurahs = mutableListOf<ModelSurah>()
+
     fun readSurahInfo(): List<ModelSurah> {
-        val modelSurahs = mutableListOf<ModelSurah>()
+        if (modelSurahs.isNotEmpty())
+            return modelSurahs
 
         context.resources.openRawResource(R.raw.surahs).reader(Charsets.UTF_8).use { reader ->
             val buffer = CharArray(16384)

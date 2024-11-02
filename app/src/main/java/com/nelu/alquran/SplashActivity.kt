@@ -5,10 +5,13 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.nelu.quran_data.di.QuranData
+import com.nelu.quran_data.utils.parser.IndexParser
+import com.nelu.quran_data.utils.parser.PageInfoParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -36,10 +39,38 @@ class SplashActivity : AppCompatActivity() {
 //        val file = File(cacheDir, "paras")
 //        file.writeText(pages.toString())
 
+//        QuranData.quran.getQuranDataAll()
+
+
+//        measureTimeMillis {
+//            val indexes = StringBuilder()
+//            QuranData.quran.getQuranDataAll().forEach {
+//                indexes.append("${it.id}|${it.juz}|${it.page}|${it.ayah}|${it.surah}\n")
+//            }
+//            val file = File(cacheDir, "indexes")
+//            file.writeText(indexes.toString())
+//        }.let { time->
+//            findViewById<TextView>(R.id.time).text = "$time ms"
+//        }
+
+//        measureTimeMillis {
+//            resources.openRawResource(com.nelu.quran_data.R.raw.quran_page).bufferedReader(Charsets.UTF_8).readText().let {
+//                val json = JSONArray(it)
+//                val indexes = StringBuilder()
+//                for (i in 0 until json.length()) {
+//                    val obj = json.getJSONObject(i)
+//                    indexes.append("${obj.getInt("Id")}|${obj.getInt("surah")}|${obj.getInt("juz")}|${obj.getInt("page")}|${obj.getInt("ayah_in_surah")}\n")
+//                }
+//                val file = File(cacheDir, "indexes")
+//                file.writeText(indexes.toString())
+//            }
+//        }.let { time->
+//            findViewById<TextView>(R.id.time).text = "$time ms"
+//        }
+
         measureTimeMillis {
-            QuranData.surah.getSurahInfo().let {
-                Log.e("DATA", it.toString())
-            }
+            QuranData.quran.getQuranDataAll()
+//            IndexParser.readInfo()
         }.let { time->
             findViewById<TextView>(R.id.time).text = "$time ms"
         }

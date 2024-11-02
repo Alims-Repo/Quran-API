@@ -6,9 +6,11 @@ import com.nelu.quran_data.di.QuranData.context
 
 object PageInfoParser {
 
+    private val modelPages = mutableListOf<ModelPage>()
+
     fun readPageInfo(): List<ModelPage> {
 
-        val modelPages = mutableListOf<ModelPage>()
+        if (modelPages.isNotEmpty()) return modelPages
 
         context.resources.openRawResource(R.raw.pages).use { inputStream ->
             val buffer = ByteArray(16384)

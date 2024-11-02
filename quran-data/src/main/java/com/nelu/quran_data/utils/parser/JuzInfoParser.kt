@@ -7,8 +7,11 @@ import com.nelu.quran_data.di.QuranData.context
 
 object JuzInfoParser {
 
+    private val modelSurahs = mutableListOf<ModelJuz>()
+
     fun readJuzInfo(): List<ModelJuz> {
-        val modelSurahs = mutableListOf<ModelJuz>()
+
+        if (modelSurahs.isNotEmpty()) return modelSurahs
 
         context.resources.openRawResource(R.raw.paras).use { inputStream ->
             val buffer = ByteArray(16384)
