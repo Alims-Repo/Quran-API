@@ -7,7 +7,7 @@ interface BaseSurah {
     // Basic API for Surah
     fun getSurahInfo(): List<ModelSurah>
 
-    fun getSurahInfo(surahNo: Int): ModelSurah
+    fun getSurahInfo(surahNo: Int): ModelSurah?
 
     fun getSurahInfo(query: String): List<ModelSurah>
 

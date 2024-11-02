@@ -1,20 +1,19 @@
 package com.nelu.quran_data.data.repo
 
-import com.nelu.quran_data.data.constant.Surah
 import com.nelu.quran_data.data.model.ModelSurah
 import com.nelu.quran_data.data.model.ModelSurah.Companion.getSurah
-import com.nelu.quran_data.data.model.ModelSurah.Companion.toSurahList
 import com.nelu.quran_data.data.repo.base.BaseSurah
+import com.nelu.quran_data.utils.parser.SurahInfoParser.readSurahInfo
 import org.json.JSONArray
 
 class RepositorySurah : BaseSurah {
 
     override fun getSurahInfo(): List<ModelSurah> {
-        return JSONArray(Surah.json).toSurahList()
+        return readSurahInfo() //JSONArray(Surah.json).toSurahList()
     }
 
-    override fun getSurahInfo(number: Int): ModelSurah {
-        return JSONArray(Surah.json).getSurah(number)
+    override fun getSurahInfo(number: Int): ModelSurah? {
+        return readSurahInfo(number)
     }
 
     override fun getSurahInfo(query: String): List<ModelSurah> {

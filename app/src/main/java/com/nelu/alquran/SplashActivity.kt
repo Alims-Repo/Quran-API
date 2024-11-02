@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 import kotlin.system.measureTimeMillis
 
 class SplashActivity : AppCompatActivity() {
@@ -18,16 +19,25 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
 //        val pages = StringBuilder()
-//
-//        QuranData.page.getPageInfo().forEach {
-//            pages.append("${it.page}|${it.start}|${it.end}\n")
+//        QuranData.surah.getSurahInfo().forEach {
+//            pages.append("${it.number}|${it.arabicName}|${it.englishName}|${it.englishTranslation}|${it.revelationType}|${it.numberOfAyahs}\n")
 //        }
-//        val file = File(cacheDir, "pages")
+//        val file = File(cacheDir, "surah")
 //        file.writeText(pages.toString())
 
+        //    val number: Int,
+        //    val startId: Int,
+        //    val startSurah: Int,
+        //    val totalAyah: Int
+//        val pages = StringBuilder()
+//        QuranData.juz.getJuzInfo().forEach {
+//            pages.append("${it.number}|${it.startId}|${it.startSurah}|${it.totalAyah}\n")
+//        }
+//        val file = File(cacheDir, "paras")
+//        file.writeText(pages.toString())
 
         measureTimeMillis {
-            QuranData.page.getPageInfo(600).let {
+            QuranData.surah.getSurahInfo().let {
                 Log.e("DATA", it.toString())
             }
         }.let { time->

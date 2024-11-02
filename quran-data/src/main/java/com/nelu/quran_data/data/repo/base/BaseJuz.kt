@@ -7,7 +7,7 @@ interface BaseJuz {
     // Basic API for Juz
     fun getJuzInfo(): List<ModelJuz>
 
-    fun getJuzInfo(number: Int): ModelJuz
+    fun getJuzInfo(number: Int): ModelJuz?
 
     // Complex API for Juz
     fun getJuzByAyahId(ayahId: Int): ModelJuz?

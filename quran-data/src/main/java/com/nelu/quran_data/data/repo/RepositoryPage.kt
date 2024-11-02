@@ -1,11 +1,8 @@
 package com.nelu.quran_data.data.repo
 
-import com.nelu.quran_data.R
 import com.nelu.quran_data.data.model.ModelPage
 import com.nelu.quran_data.data.repo.base.BasePage
-import com.nelu.quran_data.di.QuranData.context
-import com.nelu.quran_data.utils.parser.PageInfo.readPageInfo
-import org.json.JSONArray
+import com.nelu.quran_data.utils.parser.PageInfoParser.readPageInfo
 
 class RepositoryPage : BasePage {
 
@@ -31,21 +28,4 @@ class RepositoryPage : BasePage {
         }
 
     }
-
-//    private fun readPageInfo(page: Int): ModelPage {
-//        context.resources.openRawResource(
-//            R.raw.pages
-//        ).bufferedReader().readText().let {
-//            return JSONArray(it).getJSONObject(page - 1).run {
-//                ModelPage(
-//                    getInt("page"),
-//                    getInt("start"),
-//                    getInt("end")
-//                )
-//            }
-//        }
-//    }
-
-
-
 }
