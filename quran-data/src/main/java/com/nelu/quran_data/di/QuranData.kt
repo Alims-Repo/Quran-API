@@ -1,7 +1,6 @@
 package com.nelu.quran_data.di
 
 import android.app.Application
-import com.nelu.quran_data.data.constant.Page
 import com.nelu.quran_data.data.repo.RepositoryJuz
 import com.nelu.quran_data.data.repo.RepositoryPage
 import com.nelu.quran_data.data.repo.RepositoryQuran
@@ -70,6 +69,5 @@ object QuranData : BaseData {
         baseQuran = RepositoryQuran()
 
         // Preload Data
-        Page
     }
 }

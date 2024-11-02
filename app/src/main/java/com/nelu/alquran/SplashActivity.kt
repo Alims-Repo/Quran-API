@@ -2,12 +2,14 @@ package com.nelu.alquran
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.nelu.quran_data.di.QuranData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 class SplashActivity : AppCompatActivity() {
 
@@ -24,14 +26,12 @@ class SplashActivity : AppCompatActivity() {
 //        file.writeText(pages.toString())
 
 
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(1000L)
-            val start = System.currentTimeMillis()
-            Log.e(
-                "DATA",
-                QuranData.page.getPageInfoByAyah(listOf(1, 8, 647, 2344, 6003)).toString()
-            )
-            Log.e("Time Took", "${System.currentTimeMillis() - start} ms")
+        measureTimeMillis {
+            QuranData.page.getPageInfo(600).let {
+                Log.e("DATA", it.toString())
+            }
+        }.let { time->
+            findViewById<TextView>(R.id.time).text = "$time ms"
         }
     }
 }

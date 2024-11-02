@@ -15,7 +15,7 @@
       </SelectionState>
       <SelectionState runConfigName="Al_Quran.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-02T10:15:48.806615Z">
+        <DropdownSelection timestamp="2024-11-02T10:40:40.386584Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="PhysicalDevice" identifier="serial=RFCN20PASQP" />
