@@ -1,6 +1,7 @@
 package com.nelu.quran_api.utils
 
 import android.content.Context
+import android.util.Log
 import java.io.InputStream
 
 object NativeUtils {

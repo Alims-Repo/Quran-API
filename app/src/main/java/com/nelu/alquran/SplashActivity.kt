@@ -75,23 +75,31 @@ class SplashActivity : AppCompatActivity() {
 //                readStringListFromBinary("${cacheDir}/arabic.dat")
 //                QuranData.quran.getQuranDataAll()
                 //"${cacheDir}/arabic.dat"
-                readBinaryDataFromResource(com.nelu.quran_api.R.raw.arabic) //?.let {
-//                    Log.e("DATA", it.toString())
+                repeat(20) {
+                    readBinaryDataFromResource(com.nelu.quran_api.R.raw.arabic)
+                }
+//                readBinaryDataFromResource(com.nelu.quran_api.R.raw.arabic)?.let {
+//                    Log.e("SIZE", it.size.toString())
+//                    it.forEach { Log.e("PRINT", it) }
 //                }
             }.let { time->
-                findViewById<TextView>(R.id.time).text = "$time"
+                findViewById<TextView>(R.id.time).text = "${time/20}"
             }
         }
 
         findViewById<Button>(R.id.q_surah).setOnClickListener {
             measureTime {
-                readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs, 22) //.let {
+                repeat(20) {
+                    readStringListFromRawResource(com.nelu.quran_api.R.raw.arabic)
+                }
+//
+//                readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs, 22) //.let {
 //                    Log.e("PRINT", it.map { it.number }.toString())
 //                }
 //                readModelSurahListFromBinaryMapped("${cacheDir}/surahs.dat")
 //                QuranData.quran.getQuranDataSurah(2)
             }.let { time->
-                findViewById<TextView>(R.id.time).text = "$time"
+                findViewById<TextView>(R.id.time).text = "${time/20}"
             }
         }
 

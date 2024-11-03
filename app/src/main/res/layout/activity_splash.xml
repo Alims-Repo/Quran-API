@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_gravity="center_horizontal"
-        android:text="Quran All"/>
+        android:text="(JNI)"/>
 
     <Button
         android:id="@+id/q_surah"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
-        android:text="Quran Surah"/>
+        android:text="(JVM)"/>
 
 
 </LinearLayout>
