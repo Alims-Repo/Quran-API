@@ -5,26 +5,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.nelu.quran_api.data.constant.Sensitive
+import com.nelu.quran_api.data.constant.Sensitive.surahDataIndex
 import com.nelu.quran_api.data.model.ModelSurah
-import com.nelu.quran_api.di.QuranAPI
-import com.nelu.quran_api.di.QuranAPI.loadData
-import com.nelu.quran_api.di.QuranAPI.saveData
-import com.nelu.quran_api.di.star
-import com.nelu.quran_data.di.QuranData
-import com.nelu.quran_data.utils.parser.QuranInfoParser.readQuran
-import org.json.JSONArray
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 import java.nio.ByteBuffer
-import kotlin.system.measureTimeMillis
 import kotlin.time.measureTime
-import java.io.DataInputStream
-import java.io.FileInputStream
-import java.io.IOException
-import java.nio.MappedByteBuffer
 import java.nio.channels.Channels
-import java.nio.channels.FileChannel
 
 class SplashActivity : AppCompatActivity() {
 
@@ -79,17 +65,9 @@ class SplashActivity : AppCompatActivity() {
 //            findViewById<TextView>(R.id.time).text = "$time ms"
 //        }
 
-        readStringListFromRawResource(com.nelu.quran_api.R.raw.arabic)?.let {
-//            Translations.DaoTranslation.newBuilder()
-           saveData(it)
-        }
-
         findViewById<Button>(R.id.q_all).setOnClickListener {
             measureTime {
-                loadData().let {
-                    Log.e("PRINT", it.toString())
-                }
-//                readStringListFromRawResource(com.nelu.quran_api.R.raw.arabic)
+                readStringListFromRawResource(com.nelu.quran_api.R.raw.arabic)
 //                readStringListFromBinary("${cacheDir}/arabic.dat")
 //                QuranData.quran.getQuranDataAll()
             }.let { time->
@@ -99,7 +77,9 @@ class SplashActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.q_surah).setOnClickListener {
             measureTime {
-                readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs)
+                readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs, 22).let {
+//                    Log.e("PRINT", it.map { it.number }.toString())
+                }
 //                readModelSurahListFromBinaryMapped("${cacheDir}/surahs.dat")
 //                QuranData.quran.getQuranDataSurah(2)
             }.let { time->
@@ -130,6 +110,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     fun readStringListFromRawResource(resourceId: Int): List<String>? {
+        var datas = ArrayList<Int>()
         return resources.openRawResource(resourceId).use { inputStream ->
             // Read the input stream into a ByteBuffer
             val buffer = ByteBuffer.allocate(inputStream.available())
@@ -144,48 +125,57 @@ class SplashActivity : AppCompatActivity() {
                 val stringBytes = ByteArray(stringSize)
                 buffer.get(stringBytes) // Read the binary content of the string
                 stringList.add(String(stringBytes, Charsets.UTF_8)) // Decode bytes to string
+                datas.add(stringSize)
             }
+
+            datas.chunked(78).forEach {
+                Log.e("PRINT", it.sum().toString())
+            }
+
             stringList
         }
     }
 
-    fun readModelSurahListFromBinaryMapped(resourceId: Int): List<ModelSurah> {
+    fun readModelSurahListFromBinaryMapped(resourceId: Int, id: Int? = null): List<ModelSurah> {
         return resources.openRawResource(resourceId).use { inputStream ->
-            // Allocate a ByteBuffer based on the size of the input stream
+
             val buffer = ByteBuffer.allocate(inputStream.available())
             Channels.newChannel(inputStream).read(buffer)
-            buffer.flip() // Prepare buffer for reading
+            buffer.flip()
 
-            val size = buffer.int // Read the list size
+            var size = buffer.int
             val modelSurahList = mutableListOf<ModelSurah>()
+
+            surahDataIndex.find {
+                it.first.contains(id)
+            }?.let {
+                buffer.position(it.second)
+                size = it.first.count()
+            }
 
             repeat(size) {
                 val number = buffer.int
                 val startId = buffer.int
 
-                // Read Arabic Name
+                // Read and allocate Arabic Name
                 val arabicNameSize = buffer.int
                 val arabicNameBytes = ByteArray(arabicNameSize)
                 buffer.get(arabicNameBytes)
-                val arabicName = String(arabicNameBytes)
 
-                // Read English Name
+                // Read and allocate English Name
                 val englishNameSize = buffer.int
                 val englishNameBytes = ByteArray(englishNameSize)
                 buffer.get(englishNameBytes)
-                val englishName = String(englishNameBytes)
 
-                // Read English Translation
+                // Read and allocate English Translation
                 val englishTranslationSize = buffer.int
                 val englishTranslationBytes = ByteArray(englishTranslationSize)
                 buffer.get(englishTranslationBytes)
-                val englishTranslation = String(englishTranslationBytes)
 
-                // Read Revelation Type
+                // Read and allocate Revelation Type
                 val revelationTypeSize = buffer.int
                 val revelationTypeBytes = ByteArray(revelationTypeSize)
                 buffer.get(revelationTypeBytes)
-                val revelationType = String(revelationTypeBytes)
 
                 val numberOfAyahs = buffer.int
 
@@ -193,13 +183,16 @@ class SplashActivity : AppCompatActivity() {
                     ModelSurah(
                         number,
                         startId,
-                        arabicName,
-                        englishName,
-                        englishTranslation,
-                        revelationType,
+                        String(arabicNameBytes),
+                        String(englishNameBytes),
+                        String(englishTranslationBytes),
+                        String(revelationTypeBytes),
                         numberOfAyahs
                     )
                 )
+
+                if (number == id)
+                    return modelSurahList
             }
 
             modelSurahList
