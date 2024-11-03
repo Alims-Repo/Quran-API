@@ -44,6 +44,7 @@ dependencies {
 
     implementation(project(":quran-api"))
     implementation(project(":quran-data"))
+    implementation("org.jsoup:jsoup:1.15.4")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

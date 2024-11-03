@@ -40,5 +40,13 @@
         android:layout_gravity="center_horizontal"
         android:text="Surah (JVM)"/>
 
+    <Button
+        android:id="@+id/translators_jvm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Translators (JVM)"/>
+
 
 </LinearLayout>

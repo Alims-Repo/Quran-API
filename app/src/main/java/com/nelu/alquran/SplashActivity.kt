@@ -5,15 +5,24 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.nelu.alquran.temp.html
 import com.nelu.quran_api.data.constant.Sensitive
 import com.nelu.quran_api.data.constant.Sensitive.surahDataIndex
 import com.nelu.quran_api.data.model.ModelSurah
+import com.nelu.quran_api.data.model.ModelTranslator
 import com.nelu.quran_api.di.writeStringListToBinary
 import com.nelu.quran_api.utils.NativeUtils
 import com.nelu.quran_api.utils.readBinaryDataFromResource
 import com.nelu.quran_data.di.QuranData
+import org.json.JSONArray
+import org.json.JSONObject
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.ByteBuffer
 import kotlin.time.measureTime
@@ -73,21 +82,38 @@ class SplashActivity : AppCompatActivity() {
 //        }
 
 
-        val stringList = mutableListOf<String>()
+//        val stringList = mutableListOf<String>()
+//
+//        resources.openRawResource(com.nelu.quran_api.R.raw.en).use { inputStream ->
+//            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+//                reader.forEachLine { line ->
+//                    if (stringList.size == 6236)
+//                        return@forEachLine
+//                    stringList.add(line)
+//                }
+//            }
+//        }
 
-        resources.openRawResource(com.nelu.quran_api.R.raw.en).use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
-                reader.forEachLine { line ->
-                    if (stringList.size == 6236)
-                        return@forEachLine
-                    stringList.add(line)
-                }
-            }
-        }
-
-        Log.e("DATA", stringList.last())
+//        Log.e("DATA", stringList.last())
 //
 //        writeStringListToBinary("${cacheDir}/english.dat", stringList)
+
+//        val string = ArrayList<String>()
+//
+//        val doc: Document = Jsoup.parse(html)
+//        for (row: Element in doc.select("table.transList tbody tr")) {
+//            val columns = row.select("td")
+//            val language = columns[0].text()
+//            val name = columns[1].text()
+//            val translator = columns[2].text()
+//            val code = columns[3].select("a").attr("href").split("/").last()
+//
+//            string.add("${language}|${name}|${translator}|${code}\n")
+//        }
+//        writeStringListToBinary("${cacheDir}/translator.dat", string)
+//
+//        Log.e("JSON", string.toString())
+
 
         findViewById<Button>(R.id.quran_jni).setOnClickListener {
             measureTime {
@@ -106,6 +132,16 @@ class SplashActivity : AppCompatActivity() {
                     )
                 }
 
+            }.let { time->
+                findViewById<TextView>(R.id.time).text = "${time/10}"
+            }
+        }
+
+        findViewById<Button>(R.id.translators_jvm).setOnClickListener {
+            measureTime {
+                repeat(10) {
+                    readModelTranslatorListFromBinaryMapped(com.nelu.quran_api.R.raw.translator)
+                }
             }.let { time->
                 findViewById<TextView>(R.id.time).text = "${time/10}"
             }
@@ -168,6 +204,124 @@ class SplashActivity : AppCompatActivity() {
 //            findViewById<TextView>(R.id.time).text = "$time"
 //        }
     }
+
+    fun writeModelTranslatorListToBinaryFast(filePath: String, modelTranslatorList: List<ModelTranslator>) {
+        try {
+            // Estimate the buffer size based on the approximate size of each ModelTranslator entry
+            val bufferSize = (4 + modelTranslatorList.sumOf { 16 + it.language.length + it.name.length + it.translator.length + it.code.length }) * 2
+            val buffer = ByteBuffer.allocate(bufferSize)
+
+            buffer.putInt(modelTranslatorList.size) // Write the list size
+
+            for (modelTranslator in modelTranslatorList) {
+                val languageBytes = modelTranslator.language.toByteArray(Charsets.UTF_8)
+                val nameBytes = modelTranslator.name.toByteArray(Charsets.UTF_8)
+                val translatorBytes = modelTranslator.translator.toByteArray(Charsets.UTF_8)
+                val codeBytes = modelTranslator.code.toByteArray(Charsets.UTF_8)
+
+                // Write each field's size and data
+                buffer.putInt(languageBytes.size)
+                buffer.put(languageBytes)
+
+                buffer.putInt(nameBytes.size)
+                buffer.put(nameBytes)
+
+                buffer.putInt(translatorBytes.size)
+                buffer.put(translatorBytes)
+
+                buffer.putInt(codeBytes.size)
+                buffer.put(codeBytes)
+            }
+
+            buffer.flip() // Prepare the buffer for writing
+
+            // Write to file in one go
+            FileOutputStream(filePath).channel.use { channel ->
+                channel.write(buffer)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun readTranslator(resourceId: Int): List<ModelTranslator> {
+        return resources.openRawResource(resourceId).use { inputStream ->
+            // Read the input stream into a ByteBuffer
+            val buffer = ByteBuffer.allocate(inputStream.available())
+            Channels.newChannel(inputStream).read(buffer)
+            buffer.flip() // Prepare buffer for reading
+
+            val size = buffer.int // Read the list size
+            val stringList = mutableListOf<String>()
+
+            repeat(size) {
+                val stringSize = buffer.int // Read each string's byte length
+                val stringBytes = ByteArray(stringSize)
+                buffer.get(stringBytes) // Read the binary content of the string
+                stringList.add(String(stringBytes, Charsets.UTF_8)) // Decode bytes to string
+            }
+
+            stringList.map { line ->
+                val parts = line.split("|")
+                ModelTranslator(
+                    language = parts[0],
+                    name = parts[1],
+                    translator = parts[2],
+                    code = parts[3].trim() // Remove any trailing newline characters
+                )
+            }
+        }
+    }
+
+    fun readModelTranslatorListFromBinaryMapped(resourceId: Int): List<ModelTranslator> {
+        return resources.openRawResource(resourceId).use { inputStream ->
+
+            val buffer = ByteBuffer.allocate(inputStream.available())
+            Channels.newChannel(inputStream).read(buffer)
+            buffer.flip()
+
+            val size = buffer.int // Total number of ModelTranslator entries in the file
+            val modelTranslatorList = mutableListOf<ModelTranslator>()
+
+            repeat(size) {
+                // Read Language
+                val languageSize = buffer.int
+                val languageBytes = ByteArray(languageSize)
+                buffer.get(languageBytes)
+                val language = String(languageBytes, Charsets.UTF_8)
+
+                // Read Name
+                val nameSize = buffer.int
+                val nameBytes = ByteArray(nameSize)
+                buffer.get(nameBytes)
+                val name = String(nameBytes, Charsets.UTF_8)
+
+                // Read Translator
+                val translatorSize = buffer.int
+                val translatorBytes = ByteArray(translatorSize)
+                buffer.get(translatorBytes)
+                val translator = String(translatorBytes, Charsets.UTF_8)
+
+                // Read Code
+                val codeSize = buffer.int
+                val codeBytes = ByteArray(codeSize)
+                buffer.get(codeBytes)
+                val code = String(codeBytes, Charsets.UTF_8)
+
+                modelTranslatorList.add(
+                    ModelTranslator(
+                        language = language,
+                        name = name,
+                        translator = translator,
+                        code = code
+                    )
+                )
+            }
+
+            modelTranslatorList
+        }
+    }
+
 
     fun readStringListFromRawResource(resourceId: Int): List<String>? {
         var datas = ArrayList<Int>()
