@@ -10,6 +10,10 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+//    plugins {
+//        id("com.google.protobuf") version "0.9.1"
+//    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -22,3 +26,4 @@ dependencyResolutionManagement {
 rootProject.name = "Al Quran"
 include(":app")
 include(":quran-data")
+include(":quran-api")

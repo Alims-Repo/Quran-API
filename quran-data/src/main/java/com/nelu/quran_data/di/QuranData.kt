@@ -72,7 +72,7 @@ object QuranData : BaseData {
         baseSurah = RepositorySurah()
         baseIndex = RepositoryIndex()
         baseTranslations = RepositoryTranslations()
-        baseQuran = RepositoryQuran(juz, page, surah)
+        baseQuran = RepositoryQuran(surah)
 
         // Preload Data
         IndexParser.readInfo()

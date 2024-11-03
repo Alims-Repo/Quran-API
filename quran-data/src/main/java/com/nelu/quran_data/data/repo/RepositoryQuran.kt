@@ -10,8 +10,6 @@ import com.nelu.quran_data.data.repo.base.BaseSurah
 import com.nelu.quran_data.utils.parser.QuranInfoParser.readQuran
 
 class RepositoryQuran(
-    private val baseJuz: BaseJuz,
-    private val basePage: BasePage,
     private val baseSurah: BaseSurah
 ) : BaseQuran {
 

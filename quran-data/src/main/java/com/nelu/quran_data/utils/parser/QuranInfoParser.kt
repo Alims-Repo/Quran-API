@@ -14,7 +14,7 @@ object QuranInfoParser {
 
     fun readQuran(): List<String> {
 
-        if (versesList.isNotEmpty()) return versesList
+//        if (versesList.isNotEmpty()) return versesList
 
         val start = System.currentTimeMillis()
         context.resources.openRawResource(R.raw.quran).use { inputStream ->

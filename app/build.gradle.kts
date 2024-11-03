@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -42,8 +42,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
+    implementation(project(":quran-api"))
     implementation(project(":quran-data"))
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

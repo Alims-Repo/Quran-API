@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message DaoTranslation {
+    repeated string values = 1; // This is the string array field
+}
