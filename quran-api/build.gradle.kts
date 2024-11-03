@@ -14,12 +14,6 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    sourceSets {
-        getByName("main") {
-            java.srcDir("src/main/proto") // Define proto source directory
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -29,29 +23,20 @@ android {
             )
         }
     }
+
+    externalNativeBuild {
+        cmake {
+            path("CMakeLists.txt")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
-    }
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.21.7"
-    }
-    plugins {
-        generateProtoTasks {
-            all().forEach {
-                it.builtins {
-                    create("java") {
-                        option("lite")
-                    }
-                }
-            }
-        }
     }
 }
 
