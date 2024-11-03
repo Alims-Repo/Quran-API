@@ -13,7 +13,7 @@ int readIntBigEndian(const unsigned char* buffer) {
 }
 
 extern "C" JNIEXPORT jobjectArray JNICALL
-Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv *env, jobject /* this */, jobject inputStream) {
+Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromStream(JNIEnv *env, jobject /* this */, jobject inputStream) {
     jclass inputStreamClass = env->GetObjectClass(inputStream);
     jmethodID readMethod = env->GetMethodID(inputStreamClass, "read", "([B)I");
     jmethodID closeMethod = env->GetMethodID(inputStreamClass, "close", "()V");
@@ -23,8 +23,9 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
         return nullptr;
     }
 
-    // Allocate a buffer to read the file in one go if possible
-    jbyteArray bufferArray = env->NewByteArray(8192);
+    // Increase buffer size to read larger chunks
+    const int BUFFER_SIZE = 131072;  // 64 KB buffer size for fewer JNI calls
+    jbyteArray bufferArray = env->NewByteArray(BUFFER_SIZE);
     if (bufferArray == nullptr) {
         LOGE("Failed to allocate bufferArray");
         env->CallVoidMethod(inputStream, closeMethod);
@@ -32,16 +33,19 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
     }
 
     std::vector<unsigned char> fileBuffer;
+    fileBuffer.reserve(2 * BUFFER_SIZE); // Reserve space based on expected file size
+
     int totalBytesRead = 0;
+    int bytesRead;
 
     // Read file in chunks to avoid multiple JNI calls
-    int bytesRead;
     while ((bytesRead = env->CallIntMethod(inputStream, readMethod, bufferArray)) > 0) {
         jbyte* buffer = env->GetByteArrayElements(bufferArray, nullptr);
         fileBuffer.insert(fileBuffer.end(), buffer, buffer + bytesRead);
         totalBytesRead += bytesRead;
         env->ReleaseByteArrayElements(bufferArray, buffer, JNI_ABORT);
     }
+
     env->DeleteLocalRef(bufferArray);
     env->CallVoidMethod(inputStream, closeMethod);
 
@@ -50,6 +54,7 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
         return nullptr;
     }
 
+    // Start reading the list from the buffer
     size_t offset = 0;
     int listSize = readIntBigEndian(&fileBuffer[offset]);
     offset += 4;
@@ -59,14 +64,12 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
         return nullptr;
     }
 
-    // Allocate Java String array for results
     jobjectArray result = env->NewObjectArray(listSize, env->FindClass("java/lang/String"), nullptr);
     if (result == nullptr) {
         LOGE("Failed to allocate Java String array");
         return nullptr;
     }
 
-    // Process each string in the buffer
     for (int i = 0; i < listSize; ++i) {
         if (offset + 4 > totalBytesRead) {
             LOGE("Unexpected end of file when reading string size for element %d", i);
@@ -81,7 +84,6 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
             return result;
         }
 
-        // Create Java string directly from the buffer
         jstring javaString = env->NewStringUTF(reinterpret_cast<const char*>(&fileBuffer[offset]));
         if (javaString == nullptr) {
             LOGE("Failed to create Java String for element %d", i);
@@ -89,7 +91,7 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
         }
 
         env->SetObjectArrayElement(result, i, javaString);
-        env->DeleteLocalRef(javaString); // Free local reference
+        env->DeleteLocalRef(javaString);
 
         offset += stringSize;
     }

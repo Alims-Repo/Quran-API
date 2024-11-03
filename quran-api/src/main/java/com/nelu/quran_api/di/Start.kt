@@ -13,11 +13,11 @@ import java.io.OutputStream
 import java.nio.ByteBuffer
 import kotlin.system.measureTimeMillis
 
-fun Context.star() {
-    writeStringListToBinary("${cacheDir}/arabic.dat", QuranData.quran.getQuranDataAll().map { it.arabic })
-//    writeSurahsToBinary(QuranData.surah.getSurahInfo(), openFileOutput("surahs.dat", Context.MODE_PRIVATE))
-//    QuranData.index.getAll()
-}
+//fun Context.star(data: List<String>) {
+//    writeStringListToBinary("${cacheDir}/arabic.dat", QuranData.quran.getQuranDataAll().map { it.arabic })
+////    writeSurahsToBinary(QuranData.surah.getSurahInfo(), openFileOutput("surahs.dat", Context.MODE_PRIVATE))
+////    QuranData.index.getAll()
+//}
 
 fun writeStringListToBinary(filePath: String, stringList: List<String>) {
     try {

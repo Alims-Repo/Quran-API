@@ -17,20 +17,28 @@
         android:layout_gravity="center"/>
 
     <Button
-        android:id="@+id/q_all"
+        android:id="@+id/quran_jni"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_gravity="center_horizontal"
-        android:text="(JNI)"/>
+        android:text="Quran (JNI)"/>
 
     <Button
-        android:id="@+id/q_surah"
+        android:id="@+id/quran_jvm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
-        android:text="(JVM)"/>
+        android:text="Quran (JVM)"/>
+
+    <Button
+        android:id="@+id/surah_jvm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Surah (JVM)"/>
 
 
 </LinearLayout>
