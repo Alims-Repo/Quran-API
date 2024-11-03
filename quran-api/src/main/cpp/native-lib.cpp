@@ -7,26 +7,14 @@
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-// Set reasonable maximums
-const int MAX_STRING_SIZE = 10240;    // 10KB
-const int MAX_LIST_SIZE = 10000;      // Max number of strings expected
-
-// Helper function to read an integer as big-endian from a byte array
-int readIntBigEndian(jbyte* buffer) {
-    return (static_cast<unsigned char>(buffer[0]) << 24) |
-           (static_cast<unsigned char>(buffer[1]) << 16) |
-           (static_cast<unsigned char>(buffer[2]) << 8) |
-           (static_cast<unsigned char>(buffer[3]));
+// Helper function to read an integer as big-endian
+int readIntBigEndian(const unsigned char* buffer) {
+    return (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
 }
 
 extern "C" JNIEXPORT jobjectArray JNICALL
 Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv *env, jobject /* this */, jobject inputStream) {
     jclass inputStreamClass = env->GetObjectClass(inputStream);
-    if (inputStreamClass == nullptr) {
-        LOGE("Failed to get InputStream class");
-        return nullptr;
-    }
-
     jmethodID readMethod = env->GetMethodID(inputStreamClass, "read", "([B)I");
     jmethodID closeMethod = env->GetMethodID(inputStreamClass, "close", "()V");
 
@@ -35,111 +23,76 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringListFromRawResource(JNIEnv 
         return nullptr;
     }
 
-    int listSize = 0;
-    {
-        jbyteArray buffer = env->NewByteArray(4);
-        if (buffer == nullptr) {
-            LOGE("Failed to allocate buffer for list size");
-            return nullptr;
-        }
-
-        int bytesRead = env->CallIntMethod(inputStream, readMethod, buffer);
-        if (bytesRead != 4) {
-            LOGE("Failed to read list size: bytes read %d", bytesRead);
-            env->DeleteLocalRef(buffer);
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-
-        jbyte* byteBuffer = env->GetByteArrayElements(buffer, nullptr);
-        listSize = readIntBigEndian(byteBuffer);
-        env->ReleaseByteArrayElements(buffer, byteBuffer, JNI_ABORT);
-        env->DeleteLocalRef(buffer);
-
-        // Sanity check for list size
-        if (listSize <= 0 || listSize > MAX_LIST_SIZE) {
-            LOGE("Invalid list size: %d (out of bounds)", listSize);
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-    }
-
-    LOGD("List size: %d", listSize);
-    std::vector<std::string> stringList;
-    std::vector<int> stringSizes;
-
-    for (int i = 0; i < listSize; ++i) {
-        int stringSize = 0;
-        jbyteArray buffer = env->NewByteArray(4);
-        if (buffer == nullptr) {
-            LOGE("Failed to allocate buffer for string size");
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-
-        int bytesRead = env->CallIntMethod(inputStream, readMethod, buffer);
-        if (bytesRead != 4) {
-            LOGE("Failed to read string size for element %d: bytes read %d", i, bytesRead);
-            env->DeleteLocalRef(buffer);
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-
-        jbyte* byteBuffer = env->GetByteArrayElements(buffer, nullptr);
-        stringSize = readIntBigEndian(byteBuffer);
-        env->ReleaseByteArrayElements(buffer, byteBuffer, JNI_ABORT);
-        env->DeleteLocalRef(buffer);
-
-        // Check for reasonable string size
-        if (stringSize <= 0 || stringSize > MAX_STRING_SIZE) {
-            LOGE("Invalid string size for element %d: %d (out of bounds)", i, stringSize);
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-
-        jbyteArray stringBuffer = env->NewByteArray(stringSize);
-        if (stringBuffer == nullptr) {
-            LOGE("Failed to allocate buffer for string data of size %d", stringSize);
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-
-        bytesRead = env->CallIntMethod(inputStream, readMethod, stringBuffer);
-        if (bytesRead != stringSize) {
-            LOGE("Failed to read string data for element %d: bytes read %d", i, bytesRead);
-            env->DeleteLocalRef(stringBuffer);
-            env->CallVoidMethod(inputStream, closeMethod);
-            return nullptr;
-        }
-
-        jbyte* stringData = env->GetByteArrayElements(stringBuffer, nullptr);
-        std::string str(reinterpret_cast<char*>(stringData), stringSize);
-        env->ReleaseByteArrayElements(stringBuffer, stringData, JNI_ABORT);
-        env->DeleteLocalRef(stringBuffer);
-
-        stringList.push_back(str);
-        stringSizes.push_back(stringSize);
-    }
-
-    env->CallVoidMethod(inputStream, closeMethod);
-
-    // Convert the C++ vector to a Java array
-    jobjectArray result = env->NewObjectArray(stringList.size(), env->FindClass("java/lang/String"), nullptr);
-    if (result == nullptr) {
-        LOGE("Failed to create Java String array");
+    // Allocate a buffer to read the file in one go if possible
+    jbyteArray bufferArray = env->NewByteArray(8192);
+    if (bufferArray == nullptr) {
+        LOGE("Failed to allocate bufferArray");
+        env->CallVoidMethod(inputStream, closeMethod);
         return nullptr;
     }
 
-    for (size_t i = 0; i < stringList.size(); ++i) {
-        jstring javaString = env->NewStringUTF(stringList[i].c_str());
-        if (javaString == nullptr) {
-            LOGE("Failed to create Java string for element %zu", i);
-            continue;
-        }
-        env->SetObjectArrayElement(result, i, javaString);
-        env->DeleteLocalRef(javaString);
+    std::vector<unsigned char> fileBuffer;
+    int totalBytesRead = 0;
+
+    // Read file in chunks to avoid multiple JNI calls
+    int bytesRead;
+    while ((bytesRead = env->CallIntMethod(inputStream, readMethod, bufferArray)) > 0) {
+        jbyte* buffer = env->GetByteArrayElements(bufferArray, nullptr);
+        fileBuffer.insert(fileBuffer.end(), buffer, buffer + bytesRead);
+        totalBytesRead += bytesRead;
+        env->ReleaseByteArrayElements(bufferArray, buffer, JNI_ABORT);
+    }
+    env->DeleteLocalRef(bufferArray);
+    env->CallVoidMethod(inputStream, closeMethod);
+
+    if (totalBytesRead < 4) {
+        LOGE("File too small to contain list size");
+        return nullptr;
     }
 
-    LOGD("Successfully read all data from resource");
+    size_t offset = 0;
+    int listSize = readIntBigEndian(&fileBuffer[offset]);
+    offset += 4;
+
+    if (listSize <= 0 || listSize > 10000) {  // Sanity check
+        LOGE("Invalid list size: %d", listSize);
+        return nullptr;
+    }
+
+    // Allocate Java String array for results
+    jobjectArray result = env->NewObjectArray(listSize, env->FindClass("java/lang/String"), nullptr);
+    if (result == nullptr) {
+        LOGE("Failed to allocate Java String array");
+        return nullptr;
+    }
+
+    // Process each string in the buffer
+    for (int i = 0; i < listSize; ++i) {
+        if (offset + 4 > totalBytesRead) {
+            LOGE("Unexpected end of file when reading string size for element %d", i);
+            return result;
+        }
+
+        int stringSize = readIntBigEndian(&fileBuffer[offset]);
+        offset += 4;
+
+        if (stringSize <= 0 || offset + stringSize > totalBytesRead) {
+            LOGE("Invalid string size %d for element %d", stringSize, i);
+            return result;
+        }
+
+        // Create Java string directly from the buffer
+        jstring javaString = env->NewStringUTF(reinterpret_cast<const char*>(&fileBuffer[offset]));
+        if (javaString == nullptr) {
+            LOGE("Failed to create Java String for element %d", i);
+            return result;
+        }
+
+        env->SetObjectArrayElement(result, i, javaString);
+        env->DeleteLocalRef(javaString); // Free local reference
+
+        offset += stringSize;
+    }
+
     return result;
 }
