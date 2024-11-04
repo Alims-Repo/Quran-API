@@ -1,4 +1,7 @@
 #include <jni.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
 #include <vector>
 #include <string>
 #include <android/log.h>
@@ -13,80 +16,64 @@ int readIntBigEndian(const unsigned char* buffer) {
 }
 
 extern "C" JNIEXPORT jobjectArray JNICALL
-Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromStream(JNIEnv *env, jobject /* this */, jobject inputStream) {
-    jclass inputStreamClass = env->GetObjectClass(inputStream);
-    jmethodID readMethod = env->GetMethodID(inputStreamClass, "read", "([B)I");
-    jmethodID closeMethod = env->GetMethodID(inputStreamClass, "close", "()V");
+Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromFileDescriptor(JNIEnv *env, jobject /* this */, jobject fileDescriptor, jlong fileSize) {
+    // Extract the integer file descriptor from the FileDescriptor object
+    jclass fileDescriptorClass = env->GetObjectClass(fileDescriptor);
+    jfieldID descriptorField = env->GetFieldID(fileDescriptorClass, "descriptor", "I");
+    int fd = env->GetIntField(fileDescriptor, descriptorField);
 
-    if (readMethod == nullptr || closeMethod == nullptr) {
-        LOGE("Failed to find InputStream read/close methods");
+    if (fd < 0) {
+        LOGE("Invalid file descriptor");
         return nullptr;
     }
 
-    // Increase buffer size to read larger chunks
-    const int BUFFER_SIZE = 131072;  // 64 KB buffer size for fewer JNI calls
-    jbyteArray bufferArray = env->NewByteArray(BUFFER_SIZE);
-    if (bufferArray == nullptr) {
-        LOGE("Failed to allocate bufferArray");
-        env->CallVoidMethod(inputStream, closeMethod);
+    // Map the file into memory
+    unsigned char* mappedData = static_cast<unsigned char*>(mmap(nullptr, fileSize, PROT_READ, MAP_SHARED, fd, 0));
+    if (mappedData == MAP_FAILED) {
+        LOGE("Memory mapping failed");
         return nullptr;
     }
 
-    std::vector<unsigned char> fileBuffer;
-    fileBuffer.reserve(2 * BUFFER_SIZE); // Reserve space based on expected file size
-
-    int totalBytesRead = 0;
-    int bytesRead;
-
-    // Read file in chunks to avoid multiple JNI calls
-    while ((bytesRead = env->CallIntMethod(inputStream, readMethod, bufferArray)) > 0) {
-        jbyte* buffer = env->GetByteArrayElements(bufferArray, nullptr);
-        fileBuffer.insert(fileBuffer.end(), buffer, buffer + bytesRead);
-        totalBytesRead += bytesRead;
-        env->ReleaseByteArrayElements(bufferArray, buffer, JNI_ABORT);
-    }
-
-    env->DeleteLocalRef(bufferArray);
-    env->CallVoidMethod(inputStream, closeMethod);
-
-    if (totalBytesRead < 4) {
-        LOGE("File too small to contain list size");
-        return nullptr;
-    }
-
-    // Start reading the list from the buffer
+    // Start reading the list from the mapped memory
     size_t offset = 0;
-    int listSize = readIntBigEndian(&fileBuffer[offset]);
+    int listSize = readIntBigEndian(mappedData);
     offset += 4;
 
     if (listSize <= 0 || listSize > 10000) {  // Sanity check
         LOGE("Invalid list size: %d", listSize);
+        munmap(mappedData, fileSize);
         return nullptr;
     }
 
+    // Create a Java String array to hold the results
     jobjectArray result = env->NewObjectArray(listSize, env->FindClass("java/lang/String"), nullptr);
     if (result == nullptr) {
         LOGE("Failed to allocate Java String array");
+        munmap(mappedData, fileSize);
         return nullptr;
     }
 
+    // Read each string from the mapped memory
     for (int i = 0; i < listSize; ++i) {
-        if (offset + 4 > totalBytesRead) {
+        if (offset + 4 > fileSize) {
             LOGE("Unexpected end of file when reading string size for element %d", i);
+            munmap(mappedData, fileSize);
             return result;
         }
 
-        int stringSize = readIntBigEndian(&fileBuffer[offset]);
+        int stringSize = readIntBigEndian(&mappedData[offset]);
         offset += 4;
 
-        if (stringSize <= 0 || offset + stringSize > totalBytesRead) {
+        if (stringSize <= 0 || offset + stringSize > fileSize) {
             LOGE("Invalid string size %d for element %d", stringSize, i);
+            munmap(mappedData, fileSize);
             return result;
         }
 
-        jstring javaString = env->NewStringUTF(reinterpret_cast<const char*>(&fileBuffer[offset]));
+        jstring javaString = env->NewStringUTF(reinterpret_cast<const char*>(&mappedData[offset]));
         if (javaString == nullptr) {
             LOGE("Failed to create Java String for element %d", i);
+            munmap(mappedData, fileSize);
             return result;
         }
 
@@ -95,6 +82,9 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromStream(JNIEnv *env, job
 
         offset += stringSize;
     }
+
+    // Unmap memory but do not close the file descriptor
+    munmap(mappedData, fileSize);
 
     return result;
 }

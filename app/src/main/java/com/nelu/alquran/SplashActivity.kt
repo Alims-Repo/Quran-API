@@ -5,28 +5,16 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.nelu.alquran.temp.html
-import com.nelu.quran_api.data.constant.Sensitive
 import com.nelu.quran_api.data.constant.Sensitive.surahDataIndex
 import com.nelu.quran_api.data.model.ModelSurah
 import com.nelu.quran_api.data.model.ModelTranslator
-import com.nelu.quran_api.di.writeStringListToBinary
 import com.nelu.quran_api.utils.NativeUtils
-import com.nelu.quran_api.utils.readBinaryDataFromResource
-import com.nelu.quran_data.di.QuranData
-import org.json.JSONArray
-import org.json.JSONObject
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStreamReader
 import java.nio.ByteBuffer
-import kotlin.time.measureTime
 import java.nio.channels.Channels
+import kotlin.time.measureTime
 
 class SplashActivity : AppCompatActivity() {
 
@@ -114,6 +102,17 @@ class SplashActivity : AppCompatActivity() {
 //
 //        Log.e("JSON", string.toString())
 
+        val cacheFile = File(cacheDir, "english.dat")
+
+        // Check if the file already exists in the cache
+        if (!cacheFile.exists()) {
+            resources.openRawResource(com.nelu.quran_api.R.raw.english).use { inputStream ->
+                FileOutputStream(cacheFile).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        }
+
 
         findViewById<Button>(R.id.quran_jni).setOnClickListener {
             measureTime {
@@ -127,9 +126,12 @@ class SplashActivity : AppCompatActivity() {
 //                }
 
                 repeat(10) {
-                    NativeUtils.readStringFromStream(
-                        resources.openRawResource(com.nelu.quran_api.R.raw.english)
+                    NativeUtils.readRawResourceAsStringArray(
+                        this, "english.dat"
                     )
+//                    NativeUtils.readStringFromStream(
+//                        resources.openRawResource(com.nelu.quran_api.R.raw.english)
+//                    )
                 }
 
             }.let { time->
