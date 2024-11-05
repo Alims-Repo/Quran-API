@@ -19,15 +19,15 @@ object NativeUtils {
 
     external fun readModelIndexListFromFileDescriptor(fd: FileDescriptor, fileSize: Long): IntArray
 
-    public fun readRawResourceAsStringArray(context: Context, assetFileName: String): Array<String>? {
-        val cacheFile = File(context.cacheDir, assetFileName)
+    fun readRawResourceAsStringArray(context: Context, assetFileName: String): Array<String>? {
+        val cacheFile = File(context.filesDir, assetFileName)
         return readStringFromFileDescriptor(
             FileInputStream(cacheFile).fd, cacheFile.length()
         )
     }
 
-    public fun readRawResourceAsModelIndexArray(context: Context, assetFileName: String): List<ModelIndex> {
-        val cacheFile = File(context.cacheDir, assetFileName)
+    fun readRawResourceAsModelIndexArray(context: Context, assetFileName: String): List<ModelIndex> {
+        val cacheFile = File(context.filesDir, assetFileName)
         val flatArray =  readModelIndexListFromFileDescriptor(
             FileInputStream(cacheFile).fd, cacheFile.length()
         )

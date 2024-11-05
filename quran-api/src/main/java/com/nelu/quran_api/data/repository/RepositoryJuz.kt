@@ -1,10 +1,10 @@
 package com.nelu.quran_api.data.repository
 
-import com.nelu.quran_api.data.db.DaoQuran
+import com.nelu.quran_api.data.db.DaoSurah
 import com.nelu.quran_api.data.repository.base.BaseJuz
 
 class RepositoryJuz(
-    private val daoQuran: DaoQuran
+    private val daoSurah: DaoSurah
 ) : BaseJuz {
 
     override fun getJuzList(): List<String> {

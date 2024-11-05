@@ -1,14 +1,16 @@
 package com.nelu.quran_api.data.repository.base
 
+import com.nelu.quran_api.data.model.ModelSurah
+
 interface BaseSurah {
 
-    fun getSurahList(): List<String>
+    fun getSurahList(): List<ModelSurah>
 
-    fun getSurahById(surahId: Int): String?
+    fun getSurahById(surahId: Int): ModelSurah?
 
-    fun getSurahForPage(page: Int): List<String>
+    fun getSurahForPage(page: Int): List<ModelSurah>
 
-    fun getSurahForAyah(ayahId: Int): String?
+    fun getSurahForAyah(ayahId: Int): ModelSurah?
 
-    fun getSurahByName(surahName: String): List<String>
+    fun getSurahByName(surahName: String): List<ModelSurah>
 }

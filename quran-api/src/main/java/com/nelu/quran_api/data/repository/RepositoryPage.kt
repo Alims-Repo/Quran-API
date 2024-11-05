@@ -1,10 +1,10 @@
 package com.nelu.quran_api.data.repository
 
-import com.nelu.quran_api.data.db.DaoQuran
+import com.nelu.quran_api.data.db.DaoSurah
 import com.nelu.quran_api.data.repository.base.BasePage
 
 class RepositoryPage(
-    private val daoQuran: DaoQuran
+    private val daoSurah: DaoSurah
 ) : BasePage {
 
     override fun getPageList(): List<String> {
