@@ -13,7 +13,6 @@ import com.nelu.quran_api.data.model.ModelTranslator
 import com.nelu.quran_api.di.writeModelIndexListToBinaryFast
 import com.nelu.quran_api.utils.NativeUtils
 import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsModelIndexArray
-import com.nelu.quran_data.di.QuranData
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

@@ -25,5 +25,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Al Quran"
 include(":app")
-include(":quran-data")
 include(":quran-api")

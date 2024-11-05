@@ -4,6 +4,7 @@
     <bytecodeTargetLevel>
       <module name="A_Quran.app" target="21" />
       <module name="A_Quran.quran-data" target="21" />
+      <module name="Al_Quran.quran-data" target="21" />
     </bytecodeTargetLevel>
   </component>
 </project>

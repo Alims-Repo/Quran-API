@@ -3,8 +3,6 @@ package com.nelu.quran_api.di
 import android.content.Context
 import android.util.Log
 import com.nelu.quran_api.data.model.ModelIndex
-import com.nelu.quran_data.data.model.ModelSurah
-import com.nelu.quran_data.di.QuranData
 import org.json.JSONArray
 import java.io.DataOutputStream
 import java.io.File
