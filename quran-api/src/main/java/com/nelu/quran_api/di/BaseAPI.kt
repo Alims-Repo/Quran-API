@@ -1,65 +1,26 @@
 package com.nelu.quran_api.di
 
+import android.app.Application
+import com.nelu.quran_api.data.repository.base.BaseJuz
+import com.nelu.quran_api.data.repository.base.BasePage
+import com.nelu.quran_api.data.repository.base.BaseQuran
+import com.nelu.quran_api.data.repository.base.BaseSurah
+import com.nelu.quran_api.data.repository.base.BaseTranslation
+
 /**
  * # Base API Interface
  */
 interface BaseAPI {
 
-    /**
-     * ### Surah Part
-     */
-    fun getSurahList() : List<String>
+    var application: Application
 
-    fun getSurahById(surahId: Int) : String?
+    val JUZ: BaseJuz
 
-    fun getSurahByPage(page: Int) : List<String>
+    val PAGE: BasePage
 
-    fun getSurahByAyah(ayahId: Int) : String?
+    val SURAH: BaseSurah
 
-    fun getSurahByName(surahName: String) : List<String>
+    val QURAN: BaseQuran
 
-
-    /**
-     * ### Juz Part
-     */
-    fun getJuzList() : List<String>
-
-    fun getJuzById(juzId: Int) : String?
-
-    fun getJuzByPage(page: Int) : String
-
-    fun getJuzByAyah(ayahId: Int) : String?
-
-
-    /**
-     * ### Page Part
-     */
-    fun getPageList() : List<String>
-
-    fun getPageByNumber(pageId: Int) : String?
-
-    fun getPageByAyah(ayahId: Int) : String?
-
-
-    /**
-     * ### Translation Part
-     */
-    fun getTranslationList() : List<String>
-
-
-    /**
-     * ### Quran Part
-     */
-    fun getQuranList(translations: List<String>) : List<String>
-
-    fun getQuranBySurah(surahId: Int, translations: List<String>) : List<String>
-
-    fun getQuranByJuz(juzId: Int, translations: List<String>) : List<String>
-
-    fun getQuranByPage(pageId: Int, translations: List<String>) : List<String>
-
-    fun getQuranById(ayahId: Int, translations: List<String>) : String?
-
-    fun getQuranBySurahAndAyah(surahId: Int, ayahId: Int, translations: List<String>) : String?
-
+    val TRANSLATION: BaseTranslation
 }

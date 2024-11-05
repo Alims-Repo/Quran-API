@@ -15,13 +15,11 @@ object NativeUtils {
         System.loadLibrary("native-lib")
     }
 
-    // Native method that accepts a FileDescriptor and file size
     external fun readStringFromFileDescriptor(fd: FileDescriptor, fileSize: Long): Array<String>?
 
     external fun readModelIndexListFromFileDescriptor(fd: FileDescriptor, fileSize: Long): IntArray
 
     public fun readRawResourceAsStringArray(context: Context, assetFileName: String): Array<String>? {
-
         val cacheFile = File(context.cacheDir, assetFileName)
         return readStringFromFileDescriptor(
             FileInputStream(cacheFile).fd, cacheFile.length()
@@ -29,15 +27,12 @@ object NativeUtils {
     }
 
     public fun readRawResourceAsModelIndexArray(context: Context, assetFileName: String): List<ModelIndex> {
-
         val cacheFile = File(context.cacheDir, assetFileName)
         val flatArray =  readModelIndexListFromFileDescriptor(
             FileInputStream(cacheFile).fd, cacheFile.length()
         )
 
-        val modelIndexList = ArrayList<ModelIndex>(flatArray.size / 5) // Preallocate list size
-
-        // Using a for loop with a pre-allocated list
+        val modelIndexList = ArrayList<ModelIndex>(flatArray.size / 5)
         for (i in flatArray.indices step 5) {
             modelIndexList.add(
                 ModelIndex(
