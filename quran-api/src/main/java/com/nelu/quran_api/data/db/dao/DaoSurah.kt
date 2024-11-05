@@ -1,4 +1,4 @@
-package com.nelu.quran_api.data.db
+package com.nelu.quran_api.data.db.dao
 
 import com.nelu.quran_api.data.model.ModelQuran
 import com.nelu.quran_api.data.model.ModelSurah
@@ -6,11 +6,8 @@ import com.nelu.quran_api.data.model.ModelSurah
 /**
  * # DaoQuran
  * */
-interface DaoSurah {
+internal interface DaoSurah {
 
-    /**
-     * #### Surah Part
-     */
     fun getSurahList(): List<ModelSurah>
 
     fun getSurahById(surahId: Int): ModelSurah?
@@ -21,17 +18,6 @@ interface DaoSurah {
 
     fun getSurahByName(surahName: String): List<ModelSurah>
 
-
-    /**
-     * #### Juz Part
-     */
-    fun getJuzList(): List<String>
-
-    fun getJuzById(juzId: Int): String?
-
-    fun getJuzForPage(page: Int): String
-
-    fun getJuzForAyah(ayahId: Int): String?
 
 
     /**

@@ -16,18 +16,18 @@ open class BinarySurah(context: Context) : BinaryIndex(context) {
 
     val surah = File(context.filesDir, "surahs.dat")
 
-    fun getSurahByPage(page: Int) : List<ModelSurah> {
+    protected fun surahByPage(page: Int) : List<ModelSurah> {
         return getIndexByPage(page).distinctBy { it.surah }.map { it.surah }.let { surah->
             if (surah.size == 1)
-                 listOf(getSurahById(surah.first())!!)
-            else getSurahList().filter {
+                 listOf(surahById(surah.first())!!)
+            else surahList().filter {
                 surah.contains(it.number)
             }
         }
     }
 
-    fun getSurahByName(name: String) : List<ModelSurah> {
-        return getSurahList().filter {
+    protected fun surahByName(name: String) : List<ModelSurah> {
+        return surahList().filter {
             it.englishName.contains(name, true)
             || it.arabicName.contains(name, true)
             || it.revelationType.contains(name, true)
@@ -35,18 +35,15 @@ open class BinarySurah(context: Context) : BinaryIndex(context) {
         }
     }
 
-    fun getSurahByAyah(ayah: Int) : ModelSurah? {
+    protected fun surahByAyah(ayah: Int) : ModelSurah? {
         if (ayah > 6236 || ayah < 1) return null
-        return getSurahById(getIndexByAyah(ayah)!!.surah)
+        return surahById(getIndexByAyah(ayah)!!.surah)
 
     }
 
-    fun getSurahList() : ArrayList<ModelSurah> {
+    protected fun surahList() : ArrayList<ModelSurah> {
 
-        if (surahs.isNotEmpty()) {
-            Log.e("Cache", "Returned...")
-            return surahs
-        }
+        if (surahs.isNotEmpty()) return surahs
 
         val inputStream = FileInputStream(surah)
         val buffer = ByteBuffer.allocate(inputStream.channel.size().toInt())
@@ -98,7 +95,7 @@ open class BinarySurah(context: Context) : BinaryIndex(context) {
         return surahs
     }
 
-    fun getSurahById(id: Int) : ModelSurah? {
+    protected fun surahById(id: Int) : ModelSurah? {
         val inputStream = FileInputStream(surah)
         val buffer = ByteBuffer.allocate(inputStream.channel.size().toInt())
         Channels.newChannel(inputStream).read(buffer)

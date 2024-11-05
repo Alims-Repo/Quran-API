@@ -2,51 +2,34 @@ package com.nelu.quran_api.data.db
 
 import android.app.Application
 import com.nelu.quran_api.binary.BinarySurah
+import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.model.ModelQuran
 import com.nelu.quran_api.data.model.ModelSurah
 
-class DatabaseSurah(
+class ImplSurah(
     application: Application
-) : DaoSurah {
-
-    private val binarySurah = BinarySurah(application)
+) : BinarySurah(application), DaoSurah {
 
     override fun getSurahList(): List<ModelSurah> {
-        return binarySurah.getSurahList().toList()
+        return surahList().toList()
     }
 
     override fun getSurahById(surahId: Int): ModelSurah? {
-        return binarySurah.getSurahById(surahId)
+        return surahById(surahId)
     }
 
     override fun getSurahForPage(page: Int): List<ModelSurah> {
-        return binarySurah.getSurahByPage(page)
+        return surahByPage(page)
     }
 
     override fun getSurahForAyah(ayahId: Int): ModelSurah? {
-        return binarySurah.getSurahByAyah(ayahId)
+        return surahByAyah(ayahId)
     }
 
     override fun getSurahByName(surahName: String): List<ModelSurah> {
-        return binarySurah.getSurahByName(surahName)
+        return surahByName(surahName)
     }
 
-    // Juz Part
-    override fun getJuzList(): List<String> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getJuzById(juzId: Int): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getJuzForPage(page: Int): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun getJuzForAyah(ayahId: Int): String? {
-        TODO("Not yet implemented")
-    }
 
     override fun getPageList(): List<String> {
         TODO("Not yet implemented")

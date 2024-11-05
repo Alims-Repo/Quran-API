@@ -1,11 +1,12 @@
-package com.nelu.quran_api.data.repository
+package com.nelu.quran_api.data.db
 
-import com.nelu.quran_api.data.db.dao.DaoSurah
+import android.app.Application
+import com.nelu.quran_api.binary.BinaryJuz
 import com.nelu.quran_api.data.repository.base.BaseJuz
 
-class RepositoryJuz(
-    private val daoSurah: DaoSurah
-) : BaseJuz {
+class ImplJuz(
+    application: Application
+): BinaryJuz(application), BaseJuz {
 
     override fun getJuzList(): List<String> {
         TODO("Not yet implemented")
