@@ -29,8 +29,8 @@ class SplashActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
-                QuranAPI.SURAH.getSurahByName("Cow").let {
-//                    Log.e("PRINT - ${it.size}", it.toString())
+                QuranAPI.JUZ.getJuzForAyah(8).let {
+                    Log.e("PRINT - ", it.toString())
                 }
             }.let {
                 findViewById<TextView>(R.id.time).text = "$it"

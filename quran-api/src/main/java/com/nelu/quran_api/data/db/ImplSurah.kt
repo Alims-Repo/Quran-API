@@ -19,15 +19,31 @@ class ImplSurah(
     }
 
     override fun getSurahForPage(page: Int): List<ModelSurah> {
-        return surahByPage(page)
+        return getIndex()
+            .filter { it.page == page }
+            .distinctBy { it.surah }
+            .map { it.surah }
+            .let { surah->
+                if (surah.size == 1)
+                    listOf(surahById(surah.first())!!)
+                else surahList().filter {
+                    surah.contains(it.number)
+            }
+        }
     }
 
     override fun getSurahForAyah(ayahId: Int): ModelSurah? {
-        return surahByAyah(ayahId)
+        return if (ayahId > 6236 || ayahId < 1) null
+        else surahById(getIndex().find { it.id == ayahId }!!.surah)
     }
 
     override fun getSurahByName(surahName: String): List<ModelSurah> {
-        return surahByName(surahName)
+        return surahList().filter {
+            it.englishName.contains(surahName, true)
+                    || it.arabicName.contains(surahName, true)
+                    || it.revelationType.contains(surahName, true)
+                    || it.englishTranslation.contains(surahName, true)
+        }
     }
 
 }

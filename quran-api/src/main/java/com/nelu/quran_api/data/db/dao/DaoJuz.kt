@@ -8,7 +8,7 @@ interface DaoJuz {
 
     fun getJuzById(juzId: Int): ModelJuz?
 
-    fun getJuzForPage(page: Int): ModelJuz
+    fun getJuzForPage(page: Int): ModelJuz?
 
     fun getJuzForAyah(ayahId: Int): ModelJuz?
 }

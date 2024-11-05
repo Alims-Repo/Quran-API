@@ -14,36 +14,11 @@ open class BinarySurah(context: Context) : BinaryIndex(context) {
 
     private val surahs = ArrayList<ModelSurah>()
 
-    val surah = File(context.filesDir, "surahs.dat")
-
-    protected fun surahByPage(page: Int) : List<ModelSurah> {
-        return getIndexByPage(page).distinctBy { it.surah }.map { it.surah }.let { surah->
-            if (surah.size == 1)
-                 listOf(surahById(surah.first())!!)
-            else surahList().filter {
-                surah.contains(it.number)
-            }
-        }
-    }
-
-    protected fun surahByName(name: String) : List<ModelSurah> {
-        return surahList().filter {
-            it.englishName.contains(name, true)
-            || it.arabicName.contains(name, true)
-            || it.revelationType.contains(name, true)
-            || it.englishTranslation.contains(name, true)
-        }
-    }
-
-    protected fun surahByAyah(ayah: Int) : ModelSurah? {
-        if (ayah > 6236 || ayah < 1) return null
-        return surahById(getIndexByAyah(ayah)!!.surah)
-
-    }
+    private val surah = File(context.filesDir, "surahs.dat")
 
     protected fun surahList() : ArrayList<ModelSurah> {
-
-        if (surahs.isNotEmpty()) return surahs
+        if (surahs.isNotEmpty())
+            return surahs
 
         val inputStream = FileInputStream(surah)
         val buffer = ByteBuffer.allocate(inputStream.channel.size().toInt())
@@ -96,13 +71,15 @@ open class BinarySurah(context: Context) : BinaryIndex(context) {
     }
 
     protected fun surahById(id: Int) : ModelSurah? {
+        if (surahs.isNotEmpty())
+            return surahs.find { it.number == id }
+
         val inputStream = FileInputStream(surah)
         val buffer = ByteBuffer.allocate(inputStream.channel.size().toInt())
         Channels.newChannel(inputStream).read(buffer)
         buffer.flip()
 
         var size = buffer.int
-        val modelSurahList = mutableListOf<ModelSurah>()
 
         surahDataIndex.find {
             it.first.contains(id)
