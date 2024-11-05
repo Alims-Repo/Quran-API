@@ -1,13 +1,14 @@
 package com.nelu.quran_api.data.db.dao
 
-internal interface DaoJuz {
+import com.nelu.quran_api.data.model.ModelJuz
 
-    fun getJuzList(): List<String>
+interface DaoJuz {
 
-    fun getJuzById(juzId: Int): String?
+    fun getJuzList(): List<ModelJuz>
 
-    fun getJuzForPage(page: Int): String
+    fun getJuzById(juzId: Int): ModelJuz?
 
-    fun getJuzForAyah(ayahId: Int): String?
+    fun getJuzForPage(page: Int): ModelJuz
 
+    fun getJuzForAyah(ayahId: Int): ModelJuz?
 }

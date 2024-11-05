@@ -1,8 +1,10 @@
 package com.nelu.quran_api.di
 
 import android.app.Application
+import com.nelu.quran_api.data.db.ImplJuz
 import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.ImplSurah
+import com.nelu.quran_api.data.db.dao.DaoJuz
 import com.nelu.quran_api.data.repository.RepositoryJuz
 import com.nelu.quran_api.data.repository.RepositoryPage
 import com.nelu.quran_api.data.repository.RepositoryQuran
@@ -26,6 +28,7 @@ import com.nelu.quran_api.data.repository.base.BaseTranslation
 object QuranAPI : BaseAPI {
 
     // DAO (Data Access Object) for interacting with the database.
+    private lateinit var daoJuz: DaoJuz
     private lateinit var daoSurah: DaoSurah
 
     // Repositories for each specific section of Quran data.
@@ -58,10 +61,11 @@ object QuranAPI : BaseAPI {
         }
 
         // Initialize the data access object for Quran data.
+        daoJuz = ImplJuz(application)
         daoSurah = ImplSurah(application)
 
         // Configure each repository with the DAO instance for data access.
-        juz = RepositoryJuz(daoSurah)
+        juz = RepositoryJuz(daoJuz)
         page = RepositoryPage(daoSurah)
         surah = RepositorySurah(daoSurah)
         quran = RepositoryQuran(daoSurah)
