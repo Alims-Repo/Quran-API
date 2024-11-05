@@ -17,8 +17,8 @@ class RepositoryTest {
         val appContext = ApplicationProvider.getApplicationContext<Application>()
 
         measureTimeMillis {
-            QuranData.init(appContext)
-            QuranData.quran.getQuranDataAll()
+//            QuranData.init(appContext)
+//            QuranData.quran.getQuranDataAll()
         }.let {
             Log.d("RepositoryTest", "Time: $it ms")
         }

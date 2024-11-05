@@ -17,10 +17,18 @@
         android:layout_gravity="center"/>
 
     <Button
-        android:id="@+id/quran_jni"
+        android:id="@+id/quran_query_jni"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Quran Query (JNI)"/>
+
+    <Button
+        android:id="@+id/quran_jni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
         android:text="Quran (JNI)"/>
 
@@ -31,6 +39,22 @@
         android:layout_marginTop="16dp"
         android:layout_gravity="center_horizontal"
         android:text="Quran (JVM)"/>
+
+    <Button
+        android:id="@+id/index_jni"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Index (JNI)"/>
+
+    <Button
+        android:id="@+id/index_jvm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:text="Index (JVM)"/>
 
     <Button
         android:id="@+id/surah_jvm"

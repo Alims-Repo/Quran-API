@@ -2,6 +2,7 @@ package com.nelu.quran_api.di
 
 import android.content.Context
 import android.util.Log
+import com.nelu.quran_api.data.model.ModelIndex
 import com.nelu.quran_data.data.model.ModelSurah
 import com.nelu.quran_data.di.QuranData
 import org.json.JSONArray
@@ -19,23 +20,49 @@ import kotlin.system.measureTimeMillis
 ////    QuranData.index.getAll()
 //}
 
-fun writeStringListToBinary(filePath: String, stringList: List<String>) {
+//fun writeStringListToBinary(filePath: String, stringList: List<String>) {
+//    try {
+//        // Calculate total buffer size: 4 bytes for list size, plus 4 bytes for each string length and the string content itself
+//        val bufferSize = 4 + stringList.sumOf { 4 + it.toByteArray().size }
+//        val buffer = ByteBuffer.allocate(bufferSize)
+//
+//        buffer.putInt(stringList.size) // Write the total number of strings
+//
+//        for (str in stringList) {
+//            val strBytes = str.toByteArray(Charsets.UTF_8)
+//            buffer.putInt(strBytes.size) // Write each string's byte length
+//            buffer.put(strBytes)         // Write the actual string content in binary form
+//        }
+//
+//        buffer.flip() // Prepare buffer for writing
+//
+//        // Write the buffer to file in one go
+//        FileOutputStream(filePath).channel.use { channel ->
+//            channel.write(buffer)
+//        }
+//    } catch (e: IOException) {
+//        e.printStackTrace()
+//    }
+//}
+
+fun writeModelIndexListToBinaryFast(filePath: String, modelIndexList: List<ModelIndex>) {
     try {
-        // Calculate total buffer size: 4 bytes for list size, plus 4 bytes for each string length and the string content itself
-        val bufferSize = 4 + stringList.sumOf { 4 + it.toByteArray().size }
+        // Estimate the size for ByteBuffer: 5 integers per ModelIndex (5 * 4 bytes per integer)
+        val bufferSize = 4 + modelIndexList.size * 5 * 4 // 4 bytes for list size + 5 integers * 4 bytes for each ModelIndex
         val buffer = ByteBuffer.allocate(bufferSize)
 
-        buffer.putInt(stringList.size) // Write the total number of strings
-
-        for (str in stringList) {
-            val strBytes = str.toByteArray(Charsets.UTF_8)
-            buffer.putInt(strBytes.size) // Write each string's byte length
-            buffer.put(strBytes)         // Write the actual string content in binary form
+        buffer.putInt(modelIndexList.size) // Write list size
+        for (modelIndex in modelIndexList) {
+            buffer.putInt(modelIndex.id)
+            buffer.putInt(modelIndex.surah)
+            buffer.putInt(modelIndex.juz)
+            buffer.putInt(modelIndex.page)
+            buffer.putInt(modelIndex.ayahInSurah)
         }
 
-        buffer.flip() // Prepare buffer for writing
+        buffer.flip() // Prepare the buffer for writing
 
-        // Write the buffer to file in one go
+        // Write to file in one go
         FileOutputStream(filePath).channel.use { channel ->
             channel.write(buffer)
         }

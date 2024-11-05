@@ -75,7 +75,7 @@ object QuranData : BaseData {
         baseQuran = RepositoryQuran(surah)
 
         // Preload Data
-        IndexParser.readInfo()
-        QuranInfoParser.readQuran()
+//        IndexParser.readInfo()
+//        QuranInfoParser.readQuran()
     }
 }

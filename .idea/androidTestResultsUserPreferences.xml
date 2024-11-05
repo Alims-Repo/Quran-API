@@ -42,6 +42,48 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-285958639">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Medium_Phone_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung SCG01" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-166593179">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="313" />
+                  <entry key="Medium_Phone_API_33" value="343" />
+                  <entry key="Tests" value="583" />
+                  <entry key="samsung SCG01" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="2074342263">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Medium_Phone_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                  <entry key="samsung SCG01" value="120" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

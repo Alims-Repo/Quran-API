@@ -6,9 +6,14 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.nelu.quran_api.data.constant.Sensitive.surahDataIndex
+import com.nelu.quran_api.data.model.ModelIndex
+import com.nelu.quran_api.data.model.ModelQuran
 import com.nelu.quran_api.data.model.ModelSurah
 import com.nelu.quran_api.data.model.ModelTranslator
+import com.nelu.quran_api.di.writeModelIndexListToBinaryFast
 import com.nelu.quran_api.utils.NativeUtils
+import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsModelIndexArray
+import com.nelu.quran_data.di.QuranData
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -102,86 +107,104 @@ class SplashActivity : AppCompatActivity() {
 //
 //        Log.e("JSON", string.toString())
 
-        val cacheFile = File(cacheDir, "english.dat")
 
         // Check if the file already exists in the cache
-        if (!cacheFile.exists()) {
+        if (!File(cacheDir, "english.dat").exists()) {
             resources.openRawResource(com.nelu.quran_api.R.raw.english).use { inputStream ->
-                FileOutputStream(cacheFile).use { outputStream ->
+                FileOutputStream(File(cacheDir, "english.dat")).use { outputStream ->
                     inputStream.copyTo(outputStream)
                 }
             }
         }
 
-
-        findViewById<Button>(R.id.quran_jni).setOnClickListener {
-            measureTime {
-//                readStringListFromRawResource(com.nelu.quran_api.R.raw.arabic)
-//                NativeUtils.readBinaryData("${cacheDir}/arabic.dat")
-//                readStringListFromBinary("${cacheDir}/arabic.dat")
-//                QuranData.quran.getQuranDataAll()
-                //"${cacheDir}/arabic.dat"
-//                repeat(10) {
-//                    readBinaryDataFromResource(com.nelu.quran_api.R.raw.arabic)
-//                }
-
-                repeat(10) {
-                    NativeUtils.readRawResourceAsStringArray(
-                        this, "english.dat"
-                    )
-//                    NativeUtils.readStringFromStream(
-//                        resources.openRawResource(com.nelu.quran_api.R.raw.english)
-//                    )
+        if (!File(cacheDir, "indexes.dat").exists()) {
+            resources.openRawResource(com.nelu.quran_api.R.raw.indexes).use { inputStream ->
+                FileOutputStream(File(cacheDir, "indexes.dat")).use { outputStream ->
+                    inputStream.copyTo(outputStream)
                 }
-
-            }.let { time->
-                findViewById<TextView>(R.id.time).text = "${time/10}"
             }
         }
 
-        findViewById<Button>(R.id.translators_jvm).setOnClickListener {
+        findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
-                repeat(10) {
-                    readModelTranslatorListFromBinaryMapped(com.nelu.quran_api.R.raw.translator)
+//                val find = readRawResourceAsModelIndexArray(this, "indexes.dat")
+//                    .asSequence()
+//                    .filter { it.surah == 2 }
+//                    .toList()
+//
+//                val data = NativeUtils.readRawResourceAsStringArray(this, "english.dat")!!
+//                    .slice((find.first().id - 1) until find.last().id)
+//
+//                val final = find.mapIndexed { index, modelIndex ->
+//                    ModelQuran(modelIndex.id, listOf(data[index]))
+//                }
+
+                val find = readRawResourceAsModelIndexArray(this, "indexes.dat")
+                    .filter { it.surah == 2 }
+
+                val data = NativeUtils.readRawResourceAsStringArray(this, "english.dat")!!
+//                    .asList()
+//                    .subList(find.first().id - 1, find.last().id)
+
+                val final = find.mapIndexed { index, modelIndex ->
+                    ModelQuran(modelIndex.id, listOf(data[modelIndex.id - 1]))
                 }
+
+//                Log.e("PRINT ${find.size}", final.first().toString())
             }.let { time->
-                findViewById<TextView>(R.id.time).text = "${time/10}"
+                findViewById<TextView>(R.id.time).text = "$time"
+            }
+        }
+
+        findViewById<Button>(R.id.quran_jni).setOnClickListener {
+            measureTime {
+                NativeUtils.readRawResourceAsStringArray(this, "english.dat")
+            }.let { time->
+                findViewById<TextView>(R.id.time).text = "$time"
             }
         }
 
         findViewById<Button>(R.id.quran_jvm).setOnClickListener {
             measureTime {
-                repeat(10) {
-                    readStringListFromRawResource(com.nelu.quran_api.R.raw.english)
-                }
-//
-//                readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs, 22) //.let {
-//                    Log.e("PRINT", it.map { it.number }.toString())
-//                }
-//                readModelSurahListFromBinaryMapped("${cacheDir}/surahs.dat")
-//                QuranData.quran.getQuranDataSurah(2)
+                readStringListFromRawResource(com.nelu.quran_api.R.raw.english)
             }.let { time->
-                findViewById<TextView>(R.id.time).text = "${time/10}"
+                findViewById<TextView>(R.id.time).text = "$time"
+            }
+        }
+
+        findViewById<Button>(R.id.index_jni).setOnClickListener {
+            val read =  readRawResourceAsModelIndexArray(this, "indexes.dat")
+            measureTime {
+//                readModelIndexListFromBinaryMapped(com.nelu.quran_api.R.raw.indexes)
+
+                readRawResourceAsModelIndexArray(this, "indexes.dat")
+            }.let { time->
+                findViewById<TextView>(R.id.time).text = "$time"
+            }
+        }
+
+        findViewById<Button>(R.id.index_jvm).setOnClickListener {
+            measureTime {
+                readModelIndexListFromBinaryMapped(com.nelu.quran_api.R.raw.indexes)
+//                readRawResourceAsModelIndexArray(this, "indexes.dat")
+            }.let { time->
+                findViewById<TextView>(R.id.time).text = "$time"
             }
         }
 
         findViewById<Button>(R.id.surah_jvm).setOnClickListener {
             measureTime {
-//                repeat(10) {
-//                    readStringListFromRawResource(com.nelu.quran_api.R.raw.english)
-//                }
-
-                repeat(10) {
-                    readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs, 22)
-                }
-//
-                 //.let {
-//                    Log.e("PRINT", it.map { it.number }.toString())
-//                }
-//                readModelSurahListFromBinaryMapped("${cacheDir}/surahs.dat")
-//                QuranData.quran.getQuranDataSurah(2)
+                readModelSurahListFromBinaryMapped(com.nelu.quran_api.R.raw.surahs, 22)
             }.let { time->
-                findViewById<TextView>(R.id.time).text = "${time/10}"
+                findViewById<TextView>(R.id.time).text = "$time"
+            }
+        }
+
+        findViewById<Button>(R.id.translators_jvm).setOnClickListener {
+            measureTime {
+                readModelTranslatorListFromBinaryMapped(com.nelu.quran_api.R.raw.translator)
+            }.let { time->
+                findViewById<TextView>(R.id.time).text = "$time"
             }
         }
 
@@ -205,6 +228,52 @@ class SplashActivity : AppCompatActivity() {
 //        }.let { time->
 //            findViewById<TextView>(R.id.time).text = "$time"
 //        }
+    }
+
+    fun readModelIndexListFromBinaryMapped(resourceId: Int, id: Int? = null): List<ModelIndex> {
+        return resources.openRawResource(resourceId).use { inputStream ->
+
+            // Read the raw resource data into a ByteBuffer
+            val buffer = ByteBuffer.allocate(inputStream.available())
+            Channels.newChannel(inputStream).read(buffer)
+            buffer.flip() // Prepare buffer for reading
+
+            // Read the size of the list
+            var size = buffer.int
+            val modelIndexList = mutableListOf<ModelIndex>()
+
+            // If `id` is specified, locate the specific entry
+            // Here, we assume there's a function `indexData` that can give offsets or relevant indices
+            // Adjust as needed to fit the data structure if you have an index lookup table
+//            val entryPosition = indexData.find { it.first.contains(id) }?.second
+//            entryPosition?.let {
+//                buffer.position(it)
+//                size = 1 // Adjust size to read only one entry if looking for a specific ID
+//            }
+
+            repeat(size) {
+                val entryId = buffer.int
+                val surah = buffer.int
+                val juz = buffer.int
+                val page = buffer.int
+                val ayahInSurah = buffer.int
+
+                modelIndexList.add(
+                    ModelIndex(
+                        id = entryId,
+                        surah = surah,
+                        juz = juz,
+                        page = page,
+                        ayahInSurah = ayahInSurah
+                    )
+                )
+
+                // Return if we found the specific ID we were looking for
+                if (entryId == id) return modelIndexList
+            }
+
+            modelIndexList
+        }
     }
 
     fun writeModelTranslatorListToBinaryFast(filePath: String, modelTranslatorList: List<ModelTranslator>) {

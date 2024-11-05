@@ -1,5 +1,8 @@
-package com.nelu.quran_data.data.model
+package com.nelu.quran_api.data.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class ModelIndex(
     val id: Int,
     val surah: Int,
