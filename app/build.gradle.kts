@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation(project(":quran-api"))
-    implementation("org.jsoup:jsoup:1.15.4")
+    implementation("org.jsoup:jsoup:1.18.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

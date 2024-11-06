@@ -88,7 +88,98 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromFileDescriptor(JNIEnv *
 
     return result;
 }
+extern "C" JNIEXPORT jobjectArray JNICALL
+Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromFileDescriptors(JNIEnv *env, jobject /* this */, jobjectArray fdArray, jlongArray fileSizeArray) {
+    jsize count = env->GetArrayLength(fdArray);
 
+    // Verify fileSizeArray has the same length
+    if (env->GetArrayLength(fileSizeArray) != count) {
+        LOGE("Mismatch between file descriptor count and file size count");
+        return nullptr;
+    }
+
+    // Cache class and method references
+    jclass fileDescriptorClass = env->FindClass("java/io/FileDescriptor");
+    jfieldID descriptorField = env->GetFieldID(fileDescriptorClass, "descriptor", "I");
+    jclass stringArrayClass = env->FindClass("[Ljava/lang/String;");
+    jclass stringClass = env->FindClass("java/lang/String");
+
+    // Get the file sizes
+    jlong* fileSizes = env->GetLongArrayElements(fileSizeArray, nullptr);
+
+    // Create the outer array to hold results for each file
+    jobjectArray outerArray = env->NewObjectArray(count, stringArrayClass, nullptr);
+
+    for (jsize i = 0; i < count; ++i) {
+        // Get the file descriptor object and descriptor integer
+        jobject fileDescriptor = env->GetObjectArrayElement(fdArray, i);
+        int fd = env->GetIntField(fileDescriptor, descriptorField);
+
+        if (fd < 0) {
+            LOGE("Invalid file descriptor at index %d", i);
+            continue;
+        }
+
+        // Memory-map the file
+        unsigned char* mappedData = static_cast<unsigned char*>(mmap(nullptr, fileSizes[i], PROT_READ, MAP_SHARED, fd, 0));
+        if (mappedData == MAP_FAILED) {
+            LOGE("Memory mapping failed for file %d", i);
+            continue;
+        }
+
+        // Read list size
+        size_t offset = 0;
+        int listSize = readIntBigEndian(mappedData);
+        offset += 4;
+
+        // Validate list size
+        if (listSize <= 0 || listSize > 10000) {
+            LOGE("Invalid list size for file %d: %d", i, listSize);
+            munmap(mappedData, fileSizes[i]);
+            continue;
+        }
+
+        // Create the inner array to store each string
+        jobjectArray innerArray = env->NewObjectArray(listSize, stringClass, nullptr);
+
+        for (int j = 0; j < listSize; ++j) {
+            // Bounds check before reading the string size
+            if (offset + 4 > fileSizes[i]) {
+                LOGE("Unexpected end of file for element %d in file %d", j, i);
+                break;
+            }
+
+            int stringSize = readIntBigEndian(&mappedData[offset]);
+            offset += 4;
+
+            // Validate string size
+            if (stringSize <= 0 || offset + stringSize > fileSizes[i]) {
+                LOGE("Invalid string size %d for element %d in file %d", stringSize, j, i);
+                break;
+            }
+
+            // Create Java String from mapped memory
+            jstring javaString = env->NewStringUTF(reinterpret_cast<const char*>(&mappedData[offset]));
+            if (javaString == nullptr) {
+                LOGE("Failed to create Java String for element %d in file %d", j, i);
+                break;
+            }
+
+            env->SetObjectArrayElement(innerArray, j, javaString);
+            env->DeleteLocalRef(javaString);
+            offset += stringSize;
+        }
+
+        env->SetObjectArrayElement(outerArray, i, innerArray);
+        env->DeleteLocalRef(innerArray);
+        munmap(mappedData, fileSizes[i]);
+    }
+
+    // Release the fileSizes array
+    env->ReleaseLongArrayElements(fileSizeArray, fileSizes, 0);
+
+    return outerArray;
+}
 
 // Global references for the ModelIndex class and constructor, cached in JNI_OnLoad
 jclass modelIndexClassGlobal;

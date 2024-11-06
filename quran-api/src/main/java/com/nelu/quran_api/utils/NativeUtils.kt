@@ -1,13 +1,10 @@
 package com.nelu.quran_api.utils
 
 import android.content.Context
-import android.util.Log
 import com.nelu.quran_api.data.model.ModelIndex
 import java.io.File
 import java.io.FileDescriptor
 import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
 
 object NativeUtils {
 
@@ -19,15 +16,28 @@ object NativeUtils {
 
     external fun readModelIndexListFromFileDescriptor(fd: FileDescriptor, fileSize: Long): IntArray
 
-    fun readRawResourceAsStringArray(context: Context, assetFileName: String): Array<String>? {
-        val fileDir = File(context.filesDir, assetFileName)
+    external fun readStringFromFileDescriptors(fd: Array<FileDescriptor>, fileSize: LongArray): Array<Array<String>>
+
+    fun readQuranDataFromPaths(context: Context, fileNames: List<String>): Array<Array<String>> {
+        return readStringFromFileDescriptors(
+            fileNames.map { fileName ->
+                FileInputStream(File(context.filesDir, fileName)).fd
+            }.toTypedArray(),
+            fileNames.map { fileName ->
+                File(context.filesDir, fileName).length()
+            }.toLongArray()
+        )
+    }
+
+    fun readQuranDataFromPath(context: Context, fileName: String): Array<String>? {
+        val fileDir = File(context.filesDir, fileName)
         return readStringFromFileDescriptor(
             FileInputStream(fileDir).fd, fileDir.length()
         )
     }
 
-    fun readRawResourceAsModelIndexArray(context: Context, assetFileName: String): List<ModelIndex> {
-        val fileDir = File(context.filesDir, assetFileName)
+    fun readRawResourceAsModelIndexArray(context: Context, fileNames: String): List<ModelIndex> {
+        val fileDir = File(context.filesDir, fileNames)
         val flatArray =  readModelIndexListFromFileDescriptor(
             FileInputStream(fileDir).fd, fileDir.length()
         )

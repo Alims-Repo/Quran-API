@@ -1,25 +1,11 @@
 package com.nelu.alquran
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.nelu.quran_api.data.constant.Sensitive.surahDataIndex
-import com.nelu.quran_api.data.model.ModelIndex
-import com.nelu.quran_api.data.model.ModelQuran
-import com.nelu.quran_api.data.model.ModelSurah
-import com.nelu.quran_api.data.model.ModelTranslator
 import com.nelu.quran_api.di.QuranAPI
-import com.nelu.quran_api.di.writeModelIndexListToBinaryFast
-import com.nelu.quran_api.utils.NativeUtils
-import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsModelIndexArray
-import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsStringArray
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.nio.ByteBuffer
-import java.nio.channels.Channels
+import com.nelu.quran_api.utils.NativeUtils.readQuranDataFromPath
 import kotlin.time.measureTime
 
 class SplashActivity : AppCompatActivity() {
@@ -31,10 +17,10 @@ class SplashActivity : AppCompatActivity() {
         findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
                 QuranAPI.QURAN.getQuranList(
-                    listOf("arabic.dat", "english.dat")
+                    listOf("arabic", "english")
                 )
             }.let {
-                findViewById<TextView>(R.id.time).text = "$it"
+                findViewById<TextView>(R.id.time).text = "${it/100}"
             }
         }
 

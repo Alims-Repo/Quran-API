@@ -1,12 +1,15 @@
 package com.nelu.quran_api.binary
 
 import android.content.Context
+import android.util.Log
 import com.nelu.quran_api.data.model.ModelIndex
 import com.nelu.quran_api.utils.NativeUtils.readModelIndexListFromFileDescriptor
 import java.io.File
 import java.io.FileInputStream
 
 open class BinaryIndex(context: Context) {
+
+    private lateinit var rawIndex : IntArray
 
     private val index = ArrayList<ModelIndex>()
 
@@ -31,22 +34,28 @@ open class BinaryIndex(context: Context) {
         if (index.isNotEmpty())
             return index
 
-        val flatArray =  readModelIndexListFromFileDescriptor(
-            FileInputStream(indexes).fd, indexes.length()
-        )
-
-        for (i in flatArray.indices step 5) {
+        for (i in getRawIndex().indices step 5) {
             index.add(
                 ModelIndex(
-                    id = flatArray[i],
-                    surah = flatArray[i + 1],
-                    juz = flatArray[i + 2],
-                    page = flatArray[i + 3],
-                    ayahInSurah = flatArray[i + 4]
+                    id = rawIndex[i],
+                    surah = rawIndex[i + 1],
+                    juz = rawIndex[i + 2],
+                    page = rawIndex[i + 3],
+                    ayahInSurah = rawIndex[i + 4]
                 )
             )
         }
 
         return index
+    }
+
+    protected fun getRawIndex() : IntArray {
+        val start = System.currentTimeMillis()
+        if (::rawIndex.isInitialized.not())
+            rawIndex = readModelIndexListFromFileDescriptor(
+                FileInputStream(indexes).fd, indexes.length()
+            )
+
+        return rawIndex
     }
 }

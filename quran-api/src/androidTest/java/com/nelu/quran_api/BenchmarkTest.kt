@@ -9,8 +9,6 @@ import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsModelIndexArray
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import org.junit.Assert.*
-
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -32,7 +30,7 @@ class BenchmarkTest {
                 .filter { it.surah == 2 }
                 .toList()
 
-            val data = NativeUtils.readRawResourceAsStringArray(context, "english.dat")!!
+            val data = NativeUtils.readQuranDataFromPaths(context, "english.dat")!!
                 .slice((find.first().id - 1) until find.last().id)
 
             val final = find.mapIndexed { index, modelIndex ->
