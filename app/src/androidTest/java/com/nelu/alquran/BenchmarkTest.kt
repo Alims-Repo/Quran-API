@@ -15,27 +15,4 @@ class BenchmarkTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    @Test
-    fun manualBenchmark() {
-        val iterations = 1000
-        val startTime = System.nanoTime()
-
-        repeat(iterations) {
-            val find = readRawResourceAsModelIndexArray(context, "indexes.dat")
-                .asSequence()
-                .filter { it.surah == 2 }
-                .toList()
-
-            val data = NativeUtils.readQuranDataFromPaths(context, "english.dat")!!
-                .slice((find.first().id - 1) until find.last().id)
-
-            val final = find.mapIndexed { index, modelIndex ->
-                ModelQuran(modelIndex.id, listOf(data[index]))
-            }
-        }
-
-        val endTime = System.nanoTime()
-        val totalTime = endTime - startTime
-        println("Average execution time: ${(totalTime / iterations) / 1_000_000} ms")
-    }
 }

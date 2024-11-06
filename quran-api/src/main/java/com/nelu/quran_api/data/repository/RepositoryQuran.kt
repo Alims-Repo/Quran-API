@@ -17,28 +17,28 @@ class RepositoryQuran(
         surahId: Int,
         translations: List<String>
     ): List<ModelQuran> {
-        TODO("Not yet implemented")
+        return daoQuran.getQuranForSurah(surahId, translations)
     }
 
     override fun getQuranForJuz(
         juzId: Int,
         translations: List<String>
     ): List<ModelQuran> {
-        TODO("Not yet implemented")
+        return daoQuran.getQuranForJuz(juzId, translations)
     }
 
     override fun getQuranForPage(
         pageId: Int,
         translations: List<String>
     ): List<ModelQuran> {
-        TODO("Not yet implemented")
+        return daoQuran.getQuranForPage(pageId, translations)
     }
 
     override fun getQuranByAyahId(
         ayahId: Int,
         translations: List<String>
     ): ModelQuran? {
-        TODO("Not yet implemented")
+        return daoQuran.getQuranByAyahId(ayahId, translations)
     }
 
     override fun getQuranForSurahAndAyah(
@@ -46,6 +46,6 @@ class RepositoryQuran(
         ayahId: Int,
         translations: List<String>
     ): ModelQuran? {
-        TODO("Not yet implemented")
+        return daoQuran.getQuranForSurahAndAyah(surahId, ayahId, translations)
     }
 }

@@ -1,6 +1,7 @@
 package com.nelu.alquran
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,9 +17,12 @@ class SplashActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
-                QuranAPI.QURAN.getQuranList(
+                QuranAPI.QURAN.getQuranForSurah(
+                    1,
                     listOf("arabic", "english")
-                )
+                ).let {
+                    Log.e("DATA", it.toString())
+                }
             }.let {
                 findViewById<TextView>(R.id.time).text = "${it/100}"
             }

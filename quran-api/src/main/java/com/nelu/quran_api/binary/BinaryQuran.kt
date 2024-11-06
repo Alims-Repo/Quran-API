@@ -35,7 +35,7 @@ open class BinaryQuran(private val context: Context) : BinaryIndex(context) {
 
             quran.add(
                 ModelQuran(
-                    id = idIndex,
+                    id = idIndex + 1,
                     surah = flatArray[i + 1],
                     juz = flatArray[i + 2],
                     page = flatArray[i + 3],
