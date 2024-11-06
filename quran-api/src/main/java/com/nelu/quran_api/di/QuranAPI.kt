@@ -5,8 +5,10 @@ import com.nelu.quran_api.data.db.ImplJuz
 import com.nelu.quran_api.data.db.ImplQuran
 import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.ImplSurah
+import com.nelu.quran_api.data.db.ImplTranslation
 import com.nelu.quran_api.data.db.dao.DaoJuz
 import com.nelu.quran_api.data.db.dao.DaoQuran
+import com.nelu.quran_api.data.db.dao.DaoTranslation
 import com.nelu.quran_api.data.repository.RepositoryJuz
 import com.nelu.quran_api.data.repository.RepositoryPage
 import com.nelu.quran_api.data.repository.RepositoryQuran
@@ -33,6 +35,7 @@ object QuranAPI : BaseAPI {
     private lateinit var daoJuz: DaoJuz
     private lateinit var daoSurah: DaoSurah
     private lateinit var daoQuran: DaoQuran
+    private lateinit var daoTranslation: DaoTranslation
 
     // Repositories for each specific section of Quran data.
     private lateinit var juz: BaseJuz
@@ -40,9 +43,6 @@ object QuranAPI : BaseAPI {
     private lateinit var surah: BaseSurah
     private lateinit var quran: BaseQuran
     private lateinit var translation: BaseTranslation
-
-    // Holds the application context for initialization purposes
-    internal lateinit var application: Application
 
     // Properties to access each section of the Quran data. These are overridden from BaseAPI.
     override val JUZ: BaseJuz get() = juz
@@ -59,20 +59,22 @@ object QuranAPI : BaseAPI {
      */
     fun init(app: Application) {
         app.run {
-            application = this
             applicationContext.restoreData()
+
+            daoJuz = ImplJuz(this)
+            daoSurah = ImplSurah(this)
+            daoQuran = ImplQuran(this)
+            daoTranslation = ImplTranslation(this)
         }
 
         // Initialize the data access object for Quran data.
-        daoJuz = ImplJuz(application)
-        daoSurah = ImplSurah(application)
-        daoQuran = ImplQuran(application)
+
 
         // Configure each repository with the DAO instance for data access.
         juz = RepositoryJuz(daoJuz)
         page = RepositoryPage(daoSurah)
         surah = RepositorySurah(daoSurah)
         quran = RepositoryQuran(daoQuran)
-        translation = RepositoryTranslation(daoSurah)
+        translation = RepositoryTranslation(daoTranslation)
     }
 }

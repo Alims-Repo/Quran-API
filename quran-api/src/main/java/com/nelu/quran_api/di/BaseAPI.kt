@@ -1,6 +1,5 @@
 package com.nelu.quran_api.di
 
-import android.app.Application
 import android.content.Context
 import com.nelu.quran_api.data.repository.base.BaseJuz
 import com.nelu.quran_api.data.repository.base.BasePage
@@ -58,7 +57,7 @@ interface BaseAPI {
         listOf(
             "surahs.dat" to R.raw.surahs,
             "arabic.dat" to R.raw.arabic,
-            "english.dat" to R.raw.english,
+            "en_sahih.dat" to R.raw.en_sahih,
             "indexes.dat" to R.raw.indexes,
             "translator.dat" to R.raw.translator,
         ).forEach {

@@ -17,12 +17,7 @@ class SplashActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
-                QuranAPI.QURAN.getQuranForSurahAndAyah(
-                    1, 2,
-                    listOf("english")
-                ).let {
-                    Log.e("DATA", it.toString())
-                }
+                QuranAPI.TRANSLATION.getLocalTranslationList()
             }.let {
                 findViewById<TextView>(R.id.time).text = "${it}"
             }
