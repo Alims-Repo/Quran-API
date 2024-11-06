@@ -50,7 +50,6 @@ open class BinaryIndex(context: Context) {
     }
 
     protected fun getRawIndex() : IntArray {
-        val start = System.currentTimeMillis()
         if (::rawIndex.isInitialized.not())
             rawIndex = readModelIndexListFromFileDescriptor(
                 FileInputStream(indexes).fd, indexes.length()

@@ -17,14 +17,14 @@ class SplashActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
-                QuranAPI.QURAN.getQuranForSurah(
-                    1,
-                    listOf("arabic", "english")
+                QuranAPI.QURAN.getQuranForSurahAndAyah(
+                    1, 2,
+                    listOf("english")
                 ).let {
                     Log.e("DATA", it.toString())
                 }
             }.let {
-                findViewById<TextView>(R.id.time).text = "${it/100}"
+                findViewById<TextView>(R.id.time).text = "${it}"
             }
         }
 

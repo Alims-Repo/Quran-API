@@ -19,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -43,7 +43,6 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation(project(":quran-api"))
-    implementation("org.jsoup:jsoup:1.18.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

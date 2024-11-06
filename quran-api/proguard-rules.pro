@@ -7,5 +7,8 @@
     *;
 }
 
+-keep class com.nelu.quran_api.data.model.** {
+    *;
+}
 
 -dontwarn java.lang.invoke.StringConcatFactory

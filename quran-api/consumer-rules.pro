@@ -7,3 +7,6 @@
     *;
 }
 
+-keep class com.nelu.quran_api.data.model.** {
+    *;
+}
