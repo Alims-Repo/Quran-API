@@ -1,15 +1,16 @@
 package com.nelu.quran_api.data.db
 
 import android.app.Application
+import com.nelu.quran_api.binary.BinaryQuran
 import com.nelu.quran_api.data.db.dao.DaoQuran
 import com.nelu.quran_api.data.model.ModelQuran
 
 class ImplQuran(
     application: Application
-) : DaoQuran {
+) : BinaryQuran(application), DaoQuran {
 
     override fun getQuranList(translations: List<String>): List<ModelQuran> {
-        TODO("Not yet implemented")
+        return quranList(translations)
     }
 
     override fun getQuranForSurah(

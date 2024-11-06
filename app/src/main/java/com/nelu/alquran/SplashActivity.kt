@@ -14,6 +14,7 @@ import com.nelu.quran_api.di.QuranAPI
 import com.nelu.quran_api.di.writeModelIndexListToBinaryFast
 import com.nelu.quran_api.utils.NativeUtils
 import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsModelIndexArray
+import com.nelu.quran_api.utils.NativeUtils.readRawResourceAsStringArray
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -29,9 +30,9 @@ class SplashActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.quran_query_jni).setOnClickListener {
             measureTime {
-                QuranAPI.JUZ.getJuzForAyah(8).let {
-                    Log.e("PRINT - ", it.toString())
-                }
+                QuranAPI.QURAN.getQuranList(
+                    listOf("arabic.dat", "english.dat")
+                )
             }.let {
                 findViewById<TextView>(R.id.time).text = "$it"
             }

@@ -20,12 +20,10 @@ class ImplJuz(
     }
 
     override fun getJuzForPage(page: Int): ModelJuz? {
-        return juzByPage(page)
+        return juzList().find { it.number == juzForPage(page) }
     }
 
     override fun getJuzForAyah(ayahId: Int): ModelJuz? {
-        Log.e("JUZ", juzForAyah(ayahId).toString())
-        Log.e("JUZ All", juzList().toString())
         return juzList().find { it.number == juzForAyah(ayahId) }
     }
 }

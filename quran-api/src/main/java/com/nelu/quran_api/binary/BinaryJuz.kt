@@ -1,6 +1,7 @@
 package com.nelu.quran_api.binary
 
 import android.content.Context
+import android.util.Log
 import com.nelu.quran_api.data.model.ModelJuz
 import com.nelu.quran_api.data.model.ModelSurah
 import java.io.File
@@ -12,32 +13,25 @@ open class BinaryJuz(context: Context) : BinaryIndex(context) {
 
     private val juz = ArrayList<ModelJuz>()
 
-    protected fun juzList() : ArrayList<ModelJuz> {
-        if (juz.isNotEmpty()) return juz
+    protected fun juzList(): ArrayList<ModelJuz> {
+        if (juz.isNotEmpty())
+            return juz
 
-        juz.addAll(
-            getIndex().distinctBy { it.juz }.map {
-                ModelJuz(
-                    it.juz,
-                    it.id,
-                    it.surah,
-                    it.ayahInSurah
-                )
-            }
-        )
+        getIndex().groupBy { it.juz }.mapTo(juz) { (juzNumber, indexList) ->
+            val firstItem = indexList.first()
+            ModelJuz(
+                number = juzNumber,
+                startId = firstItem.id,
+                startSurah = firstItem.surah,
+                totalAyah = indexList.size
+            )
+        }
 
         return juz
     }
 
-    protected fun juzByPage(page: Int) : ModelJuz? {
-        return getIndex().find { it.page == page }?.let {
-            ModelJuz(
-                it.juz,
-                it.id,
-                it.surah,
-                it.ayahInSurah
-            )
-        }
+    protected fun juzForPage(page: Int) : Int {
+        return getIndex().find { it.page == page }!!.juz
     }
 
     protected fun juzForAyah(ayah: Int) : Int {

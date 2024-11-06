@@ -6,3 +6,4 @@
 -keep class com.nelu.quran_api.di.QuranAPI {
     *;
 }
+
