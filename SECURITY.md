@@ -19,7 +19,7 @@ Older versions may not receive security updates. If you are using an unsupported
 
 If you discover a security vulnerability in the Quran API SDK, please report it responsibly. We will address all reported issues swiftly to protect the integrity of our software. Please follow the guidelines below to report vulnerabilities:
 
-1. **Contact**: Send a detailed report to [security@quranapi.com](mailto:security@quranapi.com). We prefer reports in English but will accommodate other languages if possible.
+1. **Contact**: Send a detailed report to [sourav.0.alim@gmail.com](mailto:sourav.0.alim@gmail.com). We prefer reports in English but will accommodate other languages if possible.
 2. **Include the Following**:
    - A clear description of the vulnerability and its potential impact.
    - Steps to reproduce the vulnerability or a proof-of-concept code snippet.
