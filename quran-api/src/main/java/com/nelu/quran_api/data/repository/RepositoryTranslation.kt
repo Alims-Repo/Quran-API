@@ -1,8 +1,6 @@
 package com.nelu.quran_api.data.repository
 
 import android.app.Application
-import android.util.Log
-import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.dao.DaoTranslation
 import com.nelu.quran_api.data.model.ModelTranslator
 import com.nelu.quran_api.data.repository.base.BaseTranslation
@@ -18,19 +16,48 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.ByteBuffer
 
+/**
+ * # RepositoryTranslation
+ *
+ * This class implements the [BaseTranslation] interface to manage Quranic translations. It
+ * provides methods for retrieving available translations, accessing local translations, and
+ * downloading new translations. The download method supports progress tracking and binary file storage.
+ *
+ * @param application The application context, used for file storage.
+ * @param daoTranslation The Data Access Object (DAO) for managing translation data.
+ */
 class RepositoryTranslation(
     private val application: Application,
     private val daoTranslation: DaoTranslation
 ) : BaseTranslation {
 
+    /**
+     * Retrieves a list of all available translations.
+     *
+     * @return A list of [ModelTranslator] objects representing each available translation.
+     */
     override fun getTranslationList(): List<ModelTranslator> {
         return daoTranslation.getTranslationList()
     }
 
+    /**
+     * Retrieves a list of translations that are available locally on the device.
+     *
+     * @return A list of [ModelTranslator] objects representing each locally stored translation.
+     */
     override fun getLocalTranslationList(): List<ModelTranslator> {
         return daoTranslation.getLocalTranslationList()
     }
 
+    /**
+     * Downloads a specific translation identified by its unique code.
+     *
+     * This function initiates the download of a translation file and provides updates through the
+     * [TranslationDownloadListener]. The listener reports download success, failure, and progress.
+     *
+     * @param code The unique code for the translation to download.
+     * @param listener An instance of [TranslationDownloadListener] to handle download progress and status.
+     */
     override fun downloadTranslation(
         code: String,
         listener: BaseTranslation.TranslationDownloadListener
@@ -50,9 +77,7 @@ class RepositoryTranslation(
 
                 if (connection.responseCode != HttpURLConnection.HTTP_OK) {
                     listener.onFailure(
-                        Exception(
-                            "Failed to download translation, code ${connection.responseCode}"
-                        )
+                        Exception("Failed to download translation, code ${connection.responseCode}")
                     )
                     return@launch
                 }
@@ -79,9 +104,7 @@ class RepositoryTranslation(
                 }
 
                 try {
-                    writeStringListToBinary(
-                        "${application.filesDir}/$code.dat", file.readLines()
-                    )
+                    writeStringListToBinary("${application.filesDir}/$code.dat", file.readLines())
                     file.deleteRecursively()
                     listener.onSuccess()
                 } catch (e: Exception) {
@@ -100,9 +123,14 @@ class RepositoryTranslation(
         }
     }
 
+    /**
+     * Converts a list of strings to binary format and writes it to a specified file.
+     *
+     * @param filePath The path of the file to write the binary data.
+     * @param stringList A list of strings to be stored in binary format.
+     */
     private fun writeStringListToBinary(filePath: String, stringList: List<String>) {
         try {
-            // Calculate total buffer size: 4 bytes for list size, plus 4 bytes for each string length and the string content itself
             val bufferSize = 4 + stringList.sumOf { 4 + it.toByteArray().size }
             val buffer = ByteBuffer.allocate(bufferSize)
 

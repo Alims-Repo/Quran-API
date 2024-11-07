@@ -22,27 +22,6 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        QuranAPI.TRANSLATION.downloadTranslation(
-//            "sq_nahi", object : BaseTranslation.TranslationDownloadListener {
-//
-//                override fun onSuccess() {
-//                    Log.e("Success", "Success")
-//                }
-//
-//                override fun onFailure(e: Exception) {
-//                    Log.e("Failed", e.toString())
-//                }
-//
-//                override fun onProgress(
-//                    type: BaseTranslation.TranslationDownloadListener.Type,
-//                    progress: Int
-//                ) {
-//                    Log.e("Progress - $type", "Progress: $progress")
-//                }
-//
-//            }
-//        )
-
         binding.input.doAfterTextChanged {
             measure(false) {
                 QuranAPI.QURAN.searchQuran(it.toString(), list)
@@ -50,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private val list = listOf("sq_nahi", "en_sahih")
+    private val list = emptyList<String>()
 
     public fun function(view: View) {
         when(view.id) {

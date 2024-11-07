@@ -3,11 +3,11 @@ package com.nelu.quran_api.di
 import android.app.Application
 import com.nelu.quran_api.data.db.ImplJuz
 import com.nelu.quran_api.data.db.ImplQuran
-import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.ImplSurah
 import com.nelu.quran_api.data.db.ImplTranslation
 import com.nelu.quran_api.data.db.dao.DaoJuz
 import com.nelu.quran_api.data.db.dao.DaoQuran
+import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.dao.DaoTranslation
 import com.nelu.quran_api.data.repository.RepositoryJuz
 import com.nelu.quran_api.data.repository.RepositoryPage
@@ -21,53 +21,63 @@ import com.nelu.quran_api.data.repository.base.BaseSurah
 import com.nelu.quran_api.data.repository.base.BaseTranslation
 
 /**
- * ### QuranAPI
+ * # QuranAPI
  *
- * A singleton object that provides access to Quran data and related repositories.
- * This API acts as the main entry point for interacting with the Quran data within the application,
- * offering functionalities for querying Surahs, Juz, Pages, Quran content, and Translations.
- *
- * Implements `BaseAPI` to enforce consistent structure across different data modules.
+ * A singleton object that provides access to Quranic data repositories by implementing the [BaseAPI] interface.
+ * This object initializes and manages repository instances for Juz, Page, Surah, Quran, and Translation data,
+ * using DAO implementations for data access. It must be initialized using the [init] method.
  */
 object QuranAPI : BaseAPI {
 
-    // DAO (Data Access Object) for interacting with the database.
+    // DAO instances for accessing data
     private lateinit var daoJuz: DaoJuz
     private lateinit var daoSurah: DaoSurah
     private lateinit var daoQuran: DaoQuran
     private lateinit var daoTranslation: DaoTranslation
 
-    // Repositories for each specific section of Quran data.
+    // Repository instances for providing data operations
     private lateinit var juz: BaseJuz
     private lateinit var page: BasePage
     private lateinit var surah: BaseSurah
     private lateinit var quran: BaseQuran
     private lateinit var translation: BaseTranslation
 
-    // Properties to access each section of the Quran data. These are overridden from BaseAPI.
+    /** Provides access to Juz-related data and operations */
     override val JUZ: BaseJuz get() = juz
+
+    /** Provides access to Page-related data and operations */
     override val PAGE: BasePage get() = page
+
+    /** Provides access to Surah-related data and operations */
     override val SURAH: BaseSurah get() = surah
+
+    /** Provides access to Quran-related data and operations */
     override val QURAN: BaseQuran get() = quran
+
+    /** Provides access to Translation-related data and operations */
     override val TRANSLATION: BaseTranslation get() = translation
 
     /**
-     * Initializes the QuranAPI with the application context and configures each repository.
-     * This function should be called once during the application setup phase.
+     * Initializes the QuranAPI object with necessary repository and DAO instances.
      *
-     * @param application The application context used for database initialization.
+     * This function should be called once at application startup to initialize the repositories
+     * and ensure that all necessary data files are available in internal storage. It configures
+     * each repository with DAO instances for accessing Quranic data.
+     *
+     * @param app The application instance, used for context and file operations.
      */
     fun init(app: Application) {
         app.run {
             applicationContext.restoreData()
 
+            // Initialize DAOs with the application context
             daoJuz = ImplJuz(this)
             daoSurah = ImplSurah(this)
             daoQuran = ImplQuran(this)
             daoTranslation = ImplTranslation(this)
         }
 
-        // Configure each repository with the DAO instance for data access.
+        // Configure each repository with the DAO instance for data access
         juz = RepositoryJuz(daoJuz)
         page = RepositoryPage(daoSurah)
         surah = RepositorySurah(daoSurah)

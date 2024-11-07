@@ -11,60 +11,52 @@ import com.nelu.quran_api.R
 import java.io.FileOutputStream
 
 /**
- * # Base API Interface
+ * # BaseAPI
  *
- * A foundational interface for Quran-related API components, establishing a consistent structure
- * and access pattern across various data sections (Juz, Page, Surah, Quran, Translation).
- * Implementations of this interface provide an organized access point for querying Quranic data.
+ * Interface for accessing repository components that provide Quranic data such as Juz, Page, Surah,
+ * Quran, and Translation. This interface establishes a unified access point for different sections
+ * of Quranic data through their respective repositories.
  */
 interface BaseAPI {
 
-    /**
-     * The application context for initializing resources or components dependent on application scope.
-     */
-
-    /**
-     * Provides access to Juz-related data and operations.
-     * The Juz repository or data module should implement `BaseJuz`.
-     */
+    /** Provides access to Juz-related data and operations, implemented by [BaseJuz]. */
     val JUZ: BaseJuz
 
-    /**
-     * Provides access to Page-related data and operations.
-     * The Page repository or data module should implement `BasePage`.
-     */
+    /** Provides access to Page-related data and operations, implemented by [BasePage]. */
     val PAGE: BasePage
 
-    /**
-     * Provides access to Surah-related data and operations.
-     * The Surah repository or data module should implement `BaseSurah`.
-     */
+    /** Provides access to Surah-related data and operations, implemented by [BaseSurah]. */
     val SURAH: BaseSurah
 
-    /**
-     * Provides access to Quran-related data and operations.
-     * The Quran repository or data module should implement `BaseQuran`.
-     */
+    /** Provides access to Quran-related data and operations, implemented by [BaseQuran]. */
     val QURAN: BaseQuran
 
-    /**
-     * Provides access to Translation-related data and operations.
-     * The Translation repository or data module should implement `BaseTranslation`.
-     */
+    /** Provides access to Translation-related data and operations, implemented by [BaseTranslation]. */
     val TRANSLATION: BaseTranslation
 
+    /**
+     * Restores necessary Quranic data files from raw resources to the device’s internal storage.
+     *
+     * This function checks if essential data files (such as `surahs.dat`, `arabic.dat`, `indexes.dat`,
+     * and `translator.dat`) exist in the internal storage. If any file is missing, it copies the file
+     * from the application's raw resources to internal storage.
+     *
+     * @receiver [Context] The application context used for accessing resources and file storage.
+     */
     fun Context.restoreData() {
         listOf(
             "surahs.dat" to R.raw.surahs,
             "arabic.dat" to R.raw.arabic,
-            "en_sahih.dat" to R.raw.en_sahih,
             "indexes.dat" to R.raw.indexes,
             "translator.dat" to R.raw.translator,
-        ).forEach {
-            if (!File(filesDir, it.first).exists()) {
-                resources.openRawResource(it.second).copyTo(
-                    FileOutputStream(File(filesDir, it.first))
-                )
+        ).forEach { (fileName, resourceId) ->
+            val file = File(filesDir, fileName)
+            if (!file.exists()) {
+                resources.openRawResource(resourceId).use { inputStream ->
+                    FileOutputStream(file).use { outputStream ->
+                        inputStream.copyTo(outputStream)
+                    }
+                }
             }
         }
     }
