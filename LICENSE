@@ -1,11 +1,40 @@
-GNU AFFERO GENERAL PUBLIC LICENSE
-Version 3, 19 November 2007
+# Custom Private Use and Contribution License
 
-Permissions:
-- Allows modification and redistribution under the same license.
-- Requires source code disclosure in networked environments.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software for **private use** and to contribute to the Software, subject to
+the following conditions:
 
-Limitations:
-- NO WARRANTY of any kind. Distributed "as-is."
+## 1. Private Use Only
 
-For the full license text, visit [GNU AGPL](https://www.gnu.org/licenses/agpl-3.0.en.html).
+This license allows you to use, modify, and distribute the Software **for private, non-commercial purposes** only. Redistribution for public or commercial use is not permitted unless explicitly granted by the original author(s).
+
+## 2. Contributions
+
+By contributing to this repository, you agree that your contributions will be subject to the same terms as this license, and you grant permission for the contributions to be used in this Software.
+
+## 3. Attribution
+
+You must retain the following in all copies or substantial portions of the Software:
+   - The original copyright notice.
+   - This license text.
+
+## 4. Disclaimer of Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## 5. No Obligation of Support
+
+The authors of the Software are not obligated to provide any support, updates, or maintenance for this Software.
+
+## 6. Limitation of Liability
+
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA, OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE, OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+## 7. Termination
+
+This license shall automatically terminate if you violate any of its terms. Upon termination, you must immediately cease all use and distribution of the Software.
+
+---
+
+For inquiries about public or commercial use, please contact the author(s) at [sourav.0.alim@gmail.com].
