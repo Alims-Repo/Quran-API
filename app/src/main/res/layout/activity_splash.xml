@@ -23,7 +23,6 @@
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
             android:hint="Iteration"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -123,6 +122,13 @@
                 android:text="getTranslationList()"/>
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/downloadTranslation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="downloadTranslation()"/>
+
+            <com.google.android.material.chip.Chip
                 android:id="@+id/getLocalTranslationList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,6 +141,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="function"
                 android:text="getQuranList()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/searchQuran"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="searchQuran()"/>
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/getQuranForSurah"

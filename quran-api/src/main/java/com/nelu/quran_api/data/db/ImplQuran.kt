@@ -1,9 +1,12 @@
 package com.nelu.quran_api.data.db
 
 import android.app.Application
+import android.util.Log
 import com.nelu.quran_api.binary.BinaryQuran
 import com.nelu.quran_api.data.db.dao.DaoQuran
 import com.nelu.quran_api.data.model.ModelQuran
+import java.nio.charset.StandardCharsets
+import java.text.Normalizer
 
 class ImplQuran(
     application: Application
@@ -13,6 +16,20 @@ class ImplQuran(
         translations: List<String>
     ): List<ModelQuran> {
         return quranList(translations)
+    }
+
+    override fun searchQuran(
+        query: String,
+        translations: List<String>
+    ): List<ModelQuran> {
+        val lowerCaseQuery = query.lowercase()
+
+        return getQuranList(translations).filter { model ->
+            model.arabic.lowercase().contains(lowerCaseQuery)
+                    || model.translation.any { translationText ->
+                        translationText.lowercase().contains(lowerCaseQuery)
+                    }
+        }
     }
 
     override fun getQuranForSurah(
@@ -52,4 +69,6 @@ class ImplQuran(
             it.surah == surahId && it.ayahInSurah == ayahId
         }
     }
+
+    data class ModelSearchQuran(val id: Int, val arabicBinary: ByteArray, val translationBinary: List<ByteArray>)
 }

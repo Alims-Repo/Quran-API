@@ -6,6 +6,8 @@ interface BaseQuran {
 
     fun getQuranList(translations: List<String>): List<ModelQuran>
 
+    fun searchQuran(query: String, translations: List<String>): List<ModelQuran>
+
     fun getQuranForSurah(surahId: Int, translations: List<String>): List<ModelQuran>
 
     fun getQuranForJuz(juzId: Int, translations: List<String>): List<ModelQuran>

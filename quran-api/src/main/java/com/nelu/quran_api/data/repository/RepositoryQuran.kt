@@ -13,6 +13,13 @@ class RepositoryQuran(
         return daoQuran.getQuranList(translations)
     }
 
+    override fun searchQuran(
+        query: String,
+        translations: List<String>
+    ): List<ModelQuran> {
+        return daoQuran.searchQuran(query, translations)
+    }
+
     override fun getQuranForSurah(
         surahId: Int,
         translations: List<String>
