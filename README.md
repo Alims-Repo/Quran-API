@@ -194,7 +194,7 @@ Make sure to include tests for any new functionality.
 
 ## License
 
-This library is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
+This library is licensed under the GNU GENERAL PUBLIC License. See [LICENSE](LICENSE) for more information.
 
 ---
 
