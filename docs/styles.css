@@ -5,74 +5,70 @@
 }
 
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background: #f4f4f4;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8, #e6eaf2);
     color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     line-height: 1.6;
 }
 
 header {
+    width: 100%;
     background: linear-gradient(135deg, #005a9e, #00aaff);
     color: #fff;
-    padding: 4em 0;
+    padding: 2.5em 1em;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 20px 20px;
 }
 
 .header-content h1 {
-    font-size: 3em;
-    font-weight: bold;
+    font-size: 2.5em;
+    font-weight: 700;
     margin-bottom: 0.2em;
 }
 
 .header-content p {
     font-size: 1.2em;
+    margin-top: 0.5em;
 }
 
-.button {
-    padding: 12px 25px;
-    background-color: #fff;
-    color: #005a9e;
-    text-decoration: none;
-    border-radius: 25px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin-top: 1em;
-    display: inline-block;
+main {
+    padding: 2em 1em;
+    width: 90%;
+    max-width: 1100px;
 }
 
-.button:hover {
-    background-color: #005a9e;
-    color: #fff;
-}
 
-section {
-    padding: 3em 2em;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-#about, #how-it-works {
-    text-align: center;
+.glass-section {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
     padding: 2em;
-    background-color: #f9f9f9;
-    margin-bottom: 1em;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 1.5em 0;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.glass-section h2 {
+    color: #005a9e;
+    font-size: 1.8em;
+    margin-bottom: 0.5em;
 }
 
 .feature-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
 }
 
 .feature {
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 1.5em;
-    background-color: #e8e8e8;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
 
@@ -80,57 +76,139 @@ section {
     transform: scale(1.05);
 }
 
-.icon {
-    font-size: 1.5em;
-    color: #005a9e;
+.feature h3 {
+    font-size: 1.2em;
+    color: #0073e6;
+    margin-bottom: 0.5em;
 }
 
 pre {
-    background-color: #222;
-    color: #fff;
-    padding: 1.2em;
+    background: #333;
+    color: #f4f4f4;
+    padding: 1em;
     border-radius: 5px;
+    overflow-x: auto;
+    font-size: 0.9em;
+}
+
+.step-card {
+    margin-top: 1.5em;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5em;
+    border-radius: 8px;
+    border-left: 5px solid #0073e6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.step-card h3 {
+    color: #005a9e;
+    font-size: 1.2em;
+}
+
+.faq-item {
+    margin: 1em 0;
+    padding: 1.5em;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.faq-item h3 {
+    font-size: 1.3em;
+    color: #0073e6;
+    margin-bottom: 0.5em;
+}
+
+.faq-item p {
+    font-size: 1em;
+    color: #000000;
+}
+
+#get-started .step-card {
+    margin-top: 0em;
+    padding: 1.5em;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 240, 240, 0.5));
+    border-radius: 8px;
+    border-left: 5px solid #0073e6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+
+/* Individual heading and paragraph styling within each step card */
+#get-started .step-card h3 {
+    color: #005a9e;
+    font-size: 1.3em;
+    margin-bottom: 0.0em;
+}
+
+#get-started .step-card p {
+    font-size: 1em;
+    color: #333;
+    margin-top: 0.5em;
+}
+
+/* Styling for the preformatted code blocks */
+#get-started .step-card pre {
+    background-color: #333;
+    color: #f4f4f4;
+    padding: 1em;
+    border-radius: 6px;
+    margin-top: 0.5em;
     overflow-x: auto;
 }
 
-.example {
-    margin: 1.5em 0;
-    padding: 1.2em;
-    background-color: #fafafa;
-    border-left: 5px solid #0073e6;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+/* Make sure content inside each card does not overflow and stacks well */
+#get-started {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em; /* Add spacing between each step card */
 }
 
-#testimonials {
-    text-align: center;
-    margin: 2em 0;
+.glass-section h3 {
+    font-size: 1.4em;
+    color: #0073e6;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
 }
 
-.testimonial {
-    max-width: 600px;
-    margin: 1em auto;
-    background: #fdfdfd;
-    padding: 1.5em;
-    border-radius: 5px;
-    font-style: italic;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 1s ease-in-out;
+.glass-section p {
+    font-size: 1em;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 1em;
+}
+
+.glass-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.glass-section li {
+    background: rgba(240, 240, 240, 0.85);
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.glass-section li strong {
+    color: #0073e6;
+    margin-right: 8px;
 }
 
 footer {
     text-align: center;
-    padding: 1.5em;
-    background-color: #005a9e;
+    padding: 1.5em 1em;
+    background: #005a9e;
     color: #fff;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    border-radius: 20px 20px 0 0;
+    width: 100%;
 }
