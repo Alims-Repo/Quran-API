@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran API for Android</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Quran API for Android</h1>
+            <p>Fast, efficient, and comprehensive access to Quranic data for Android developers.</p>
+            <a href="#get-started" class="button">Get Started</a>
+        </div>
+    </header>
+
+    <section id="about">
+        <h2>About the Quran API</h2>
+        <p>Built for Android developers, the Quran API provides easy and efficient access to Quranic data, translations, and related resources, ideal for educational and religious applications.</p>
+    </section>
+
+    <section id="how-it-works">
+        <h2>How It Works</h2>
+        <p>The Quran API uses optimized binary storage for rapid data access. Modular design enables flexible use, allowing developers to access only the features they need.</p>
+    </section>
+
+    <section id="features">
+        <h2>Features</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <h3><span class="icon">📜</span> Access Quranic Data</h3>
+                <p>Retrieve Surahs, Juz, Pages, Ayahs, and Translations quickly and easily.</p>
+            </div>
+            <div class="feature">
+                <h3><span class="icon">⚙️</span> Optimized Storage</h3>
+                <p>Binary storage for fast data access and efficient memory use on mobile devices.</p>
+            </div>
+            <div class="feature">
+                <h3><span class="icon">🌐</span> Translation Management</h3>
+                <p>Support for multiple languages and download options for a personalized experience.</p>
+            </div>
+            <div class="feature">
+                <h3><span class="icon">🔄</span> Modular Architecture</h3>
+                <p>Interface-based design makes it easy to extend and customize functionality.</p>
+            </div>
+            <div class="feature">
+                <h3><span class="icon">🔍</span> Fast Search</h3>
+                <p>Quickly search for Ayahs, Surahs, and translations, optimized for real-time results.</p>
+            </div>
+            <div class="feature">
+                <h3><span class="icon">📱</span> Easy Integration</h3>
+                <p>Integrate seamlessly with Android projects for rapid development and deployment.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="get-started">
+        <h2>Get Started</h2>
+        <p>Add the following dependency to your project’s <code>build.gradle</code> file:</p>
+        <pre><code>implementation("com.nelu:quran-api:0.9.1-beta")</code></pre>
+        <p>Configure GitHub Packages in `settings.gradle.kts`:</p>
+        <pre><code>dependencyResolutionManagement {
+repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
+    }
+}
+}</code></pre>
+    </section>
+
+    <section id="usage">
+        <h2>Usage Examples</h2>
+        <div class="example">
+            <h3>Retrieve Surahs</h3>
+            <pre><code>val surahList = QuranAPI.SURAH.getSurahList()
+surahList.forEach { surah ->
+    println("Surah ${surah.number}: ${surah.englishName}")
+}</code></pre>
+        </div>
+        <div class="example">
+            <h3>Download a Translation</h3>
+            <pre><code>val translationCode = "en_saheeh"
+QuranAPI.TRANSLATION.downloadTranslation(translationCode, object : BaseTranslation.TranslationDownloadListener {
+    override fun onSuccess() { println("Translation downloaded!") }
+    override fun onFailure(e: Exception) { println("Download failed: ${e.message}") }
+    override fun onProgress(type: BaseTranslation.TranslationDownloadListener.Type, progress: Int) {
+        println("Progress: $progress%")
+    }
+})</code></pre>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <h2>What Developers Are Saying</h2>
+        <div class="testimonial">
+            <p>"The Quran API has streamlined Quranic data access for my apps. Fast, efficient, and easy to integrate!"</p>
+            <span>- A. Developer</span>
+        </div>
+        <div class="testimonial">
+            <p>"A must-have for any Android developer working with Quranic content. Translation management is a lifesaver."</p>
+            <span>- B. Engineer</span>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Questions? Need assistance? Reach out to our support team, ready to help developers create quality Quranic applications.</p>
+        <a href="mailto:support@quranapi.com" class="button">Contact Support</a>
+    </section>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Quran API | <a href="https://github.com/Alims-Repo/Al-Quran-API">GitHub Repository</a></p>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
