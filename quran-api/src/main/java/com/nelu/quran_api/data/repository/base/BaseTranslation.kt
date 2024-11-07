@@ -9,12 +9,17 @@ interface BaseTranslation {
     fun getLocalTranslationList(): List<ModelTranslator>
 
     fun downloadTranslation(
+        code: String,
         listener: TranslationDownloadListener
     )
 
     interface TranslationDownloadListener {
-        fun onDownloadSuccess()
-        fun onDownloadFailure()
-        fun onDownloadProgress(progress: Int)
+        fun onSuccess()
+        fun onFailure(e: Exception)
+        fun onProgress(type: Type, progress: Int)
+
+        enum class Type {
+            DOWNLOAD, ENCODE
+        }
     }
 }

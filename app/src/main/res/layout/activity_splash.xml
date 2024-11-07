@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,70 +7,198 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity"
-    android:padding="32dp">
+    tools:context=".SplashActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintEnd_toStartOf="@id/time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Iteration"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:text="0ns"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/input_container"
+        app:layout_constraintTop_toTopOf="@id/input_container"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/quran_query_jni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Quran Query (JNI)"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingVertical="16dp"
+        app:layout_constraintBottom_toTopOf="@id/footer"
+        app:layout_constraintTop_toBottomOf="@id/input_container">
 
-    <Button
-        android:id="@+id/quran_jni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Quran (JNI)"/>
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp">
 
-    <Button
-        android:id="@+id/quran_jvm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Quran (JVM)"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getSurahList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getSurahList()"/>
 
-    <Button
-        android:id="@+id/index_jni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Index (JNI)"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getSurahById"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getSurahById()"/>
 
-    <Button
-        android:id="@+id/index_jvm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Index (JVM)"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getSurahForPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getSurahForPage()"/>
 
-    <Button
-        android:id="@+id/surah_jvm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Surah (JVM)"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getSurahForAyah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getSurahForAyah()"/>
 
-    <Button
-        android:id="@+id/translators_jvm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:text="Translators (JVM)"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getSurahByName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getSurahByName()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getJuzList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getJuzList()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getJuzById"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getJuzById()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getJuzForPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getJuzForPage()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getJuzForAyah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getJuzForAyah()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getTranslationList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getTranslationList()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getLocalTranslationList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getLocalTranslationList()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getQuranList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getQuranList()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getQuranForSurah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getQuranForSurah()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getQuranForJuz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getQuranForJuz()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getQuranForPage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getQuranForPage()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getQuranByAyahId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getQuranByAyahId()"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/getQuranForSurahAndAyah"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="function"
+                android:text="getQuranForSurahAndAyah()"/>
 
 
-</LinearLayout>
+        </com.google.android.material.chip.ChipGroup>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/footer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/response"
+                android:padding="32dp"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

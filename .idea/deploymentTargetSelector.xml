@@ -16,17 +16,6 @@
       <SelectionState runConfigName="RepositoryTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="BenchmarkTest">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-05T09:02:53.934370Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/alim/.android/avd/Medium_Phone_API_33.avd" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
-      </SelectionState>
       <SelectionState runConfigName="BenchmarkTest (1)">
         <option name="selectionMode" value="DROPDOWN" />
         <DropdownSelection timestamp="2024-11-05T09:06:22.687364Z">
@@ -37,6 +26,9 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="RepositoryTesting">
+        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>

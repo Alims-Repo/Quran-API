@@ -8,7 +8,7 @@ open class BinaryQuran(private val context: Context) : BinaryIndex(context) {
 
     private val quran = ArrayList<ModelQuran>(6236)
 
-    protected fun quranList(translation: List<String>): List<ModelQuran> {
+    fun quranList(translation: List<String>): List<ModelQuran> {
         if (quran.isNotEmpty())
             return quran
 

@@ -67,14 +67,11 @@ object QuranAPI : BaseAPI {
             daoTranslation = ImplTranslation(this)
         }
 
-        // Initialize the data access object for Quran data.
-
-
         // Configure each repository with the DAO instance for data access.
         juz = RepositoryJuz(daoJuz)
         page = RepositoryPage(daoSurah)
         surah = RepositorySurah(daoSurah)
         quran = RepositoryQuran(daoQuran)
-        translation = RepositoryTranslation(daoTranslation)
+        translation = RepositoryTranslation(app, daoTranslation)
     }
 }
