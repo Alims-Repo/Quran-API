@@ -195,7 +195,3 @@ Make sure to include tests for any new functionality.
 ## License
 
 This library is licensed under the GNU GENERAL PUBLIC License. See [LICENSE](LICENSE) for more information.
-
----
-
-With this extended documentation, developers have a comprehensive guide to getting started, using, and contributing to the `quran-api` library. It includes detailed examples and explanations of the core components and interfaces, making integration and development straightforward.
