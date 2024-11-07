@@ -10,16 +10,16 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-
-//    plugins {
-//        id("com.google.protobuf") version "0.9.1"
-//    }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
+        }
     }
 }
 

@@ -28,13 +28,35 @@ The `quran-api` is a feature-rich Android library designed to access, search, an
 
 ## Installation
 
-Clone the repository and add the `quran-api` module to your Android project.
+To add the `quran-api` library to your Android project, add the following Maven repository and dependency to your project.
+
+### Step 1: Configure Repository Access
+Add the following to your `settings.gradle.kts` to configure the GitHub Packages repository:
+
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
+        }
+    }
+}
+```
+
+### Step 2: Add the Dependency
+Add the quran-api dependency to your `build.gradle` file:
+```kotlin
+implementation("com.nelu:quran-api:0.9.1-beta")
+```
+Alternatively, you can clone the repository and add the quran-api module manually:
 
 ```bash
 git clone https://github.com/Alims-Repo/Al-Quran-API.git
 ```
 
-Add the `quran-api` module as a dependency in your Android project.
 
 ## Quick Start
 
@@ -194,4 +216,4 @@ Make sure to include tests for any new functionality.
 
 ## License
 
-This library is licensed under the GNU GENERAL PUBLIC License. See [LICENSE](LICENSE) for more information.
+This library is licensed under the MIT License. See [LICENSE](LICENSE) for more information.

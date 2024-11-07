@@ -1,16 +1,12 @@
 package com.nelu.alquran
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import com.nelu.alquran.databinding.ActivitySplashBinding
-import com.nelu.quran_api.binary.BinaryQuran
 import com.nelu.quran_api.data.repository.base.BaseTranslation
 import com.nelu.quran_api.di.QuranAPI
-import java.util.ArrayList
 import kotlin.time.measureTime
 
 class SplashActivity : AppCompatActivity() {

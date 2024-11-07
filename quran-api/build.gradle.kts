@@ -1,6 +1,9 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("maven-publish")
 }
 
 android {
@@ -49,4 +52,38 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+val credentialsProperties = Properties().apply {
+    val file = file("credentials.properties")
+    if (file.exists()) {
+        load(file.inputStream())
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("bar") {
+            groupId = "com.nelu"
+            artifactId = "quran-api"
+            version = "0.9.1-beta"
+
+            artifact("${buildDir}/outputs/aar/quran-api-release.aar")
+        }
+
+        repositories {
+            maven {
+                println("Attempting to load credentials from: ${file("credentials.properties").absolutePath}")
+                println("Loaded GitHub username: ${credentialsProperties.getProperty("gpr.user")}")
+                println("Loaded GitHub token: ${credentialsProperties.getProperty("gpr.token")}")
+
+                name = "GithubPackages"
+                url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
+                credentials {
+                    username = credentialsProperties.getProperty("gpr.user")
+                    password = credentialsProperties.getProperty("gpr.token")
+                }
+            }
+        }
+    }
 }
