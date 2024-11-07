@@ -48,9 +48,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    implementation("com.nelu:quran-api:0.9.1-beta")
-
-//    implementation(project(":quran-api"))
+    implementation(project(":quran-api"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
