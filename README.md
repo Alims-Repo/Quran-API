@@ -31,7 +31,7 @@ The `quran-api` is a feature-rich Android library designed to access, search, an
 Clone the repository and add the `quran-api` module to your Android project.
 
 ```bash
-git clone https://github.com/yourusername/quran-api.git
+git clone [https://github.com/yourusername/quran-api.git](https://github.com/Alims-Repo/Al-Quran-API.git)
 ```
 
 Add the `quran-api` module as a dependency in your Android project.
