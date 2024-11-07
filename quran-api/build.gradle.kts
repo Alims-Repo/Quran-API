@@ -73,10 +73,6 @@ publishing {
 
         repositories {
             maven {
-                println("Attempting to load credentials from: ${file("credentials.properties").absolutePath}")
-                println("Loaded GitHub username: ${credentialsProperties.getProperty("gpr.user")}")
-                println("Loaded GitHub token: ${credentialsProperties.getProperty("gpr.token")}")
-
                 name = "GithubPackages"
                 url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
                 credentials {
