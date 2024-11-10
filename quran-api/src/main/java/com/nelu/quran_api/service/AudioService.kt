@@ -25,21 +25,23 @@ import java.net.URL
 @OptIn(UnstableApi::class)
 class AudioService : MediaSessionService() {
 
-    private lateinit var player: ExoPlayer
-    private lateinit var mediaSession: MediaSession
-    private lateinit var concatenatingMediaSource: ConcatenatingMediaSource
+    private val player: ExoPlayer by lazy {
+        ExoPlayer.Builder(this).build()
+    }
+
+    private val mediaSession: MediaSession by lazy {
+        MediaSession.Builder(this, player).build()
+    }
+
+    private val concatenatingMediaSource by lazy {
+        ConcatenatingMediaSource()
+    }
 
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
     override fun onCreate() {
         super.onCreate()
-
-        // Initialize ExoPlayer and MediaSession
-        player = ExoPlayer.Builder(this).build()
-        mediaSession = MediaSession.Builder(this, player).build()
-
-        concatenatingMediaSource = ConcatenatingMediaSource()
 
         repeat(10) { i->
             addMediaItemWithBackgroundDownload(
@@ -55,34 +57,29 @@ class AudioService : MediaSessionService() {
     }
 
     private fun addMediaItemWithBackgroundDownload(url: String) {
-        checkFile(url)?.let { localPath->
-            concatenatingMediaSource.addMediaSource(
-                ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
-                    .createMediaSource(
-                        MediaItem.fromUri(localPath)
-                    )
-            )
-        } ?: run {
-            val mediaItem = MediaItem.fromUri(url)
-            val mediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this))
-                .createMediaSource(mediaItem)
-
-            concatenatingMediaSource.addMediaSource(mediaSource)
-
-            scope.launch {
-                val localPath = downloadFile(url)
-                if (localPath != null) {
-                    val index = concatenatingMediaSource.size - 1
-                    val localMediaItem = MediaItem.fromUri(localPath)
-                    val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
-                        .createMediaSource(localMediaItem)
-                    withContext(Dispatchers.Main) {
-                        concatenatingMediaSource.removeMediaSource(index)
-                        concatenatingMediaSource.addMediaSource(index, localMediaSource)
+        concatenatingMediaSource.addMediaSource(
+            ProgressiveMediaSource.Factory(
+                DefaultDataSource.Factory(this)
+            ).createMediaSource(
+                checkFile(url)?.let { localPath->
+                    MediaItem.fromUri(localPath)
+                } ?: run {
+                    scope.launch {
+                        downloadFile(url)?.let { localPath->
+                            val index = concatenatingMediaSource.size - 1
+                            val localMediaItem = MediaItem.fromUri(localPath)
+                            val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
+                                .createMediaSource(localMediaItem)
+                            withContext(Dispatchers.Main) {
+                                concatenatingMediaSource.removeMediaSource(index)
+                                concatenatingMediaSource.addMediaSource(index, localMediaSource)
+                            }
+                        }
                     }
+                    MediaItem.fromUri(url)
                 }
-            }
-        }
+            )
+        )
     }
 
     private fun checkFile(url: String) : Uri? {

@@ -1,6 +1,9 @@
 package com.nelu.quran_api.di
 
 import android.app.Application
+import android.content.ComponentName
+import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.session.MediaControllerCompat
 import com.nelu.quran_api.data.db.ImplJuz
 import com.nelu.quran_api.data.db.ImplQuran
 import com.nelu.quran_api.data.db.ImplSurah

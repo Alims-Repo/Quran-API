@@ -1,5 +1,8 @@
 package com.nelu.quran_api.data.repository.base
 
+import android.support.v4.media.session.PlaybackStateCompat
+import androidx.lifecycle.LiveData
+
 interface BaseAudio {
 
     fun playAyah(ayah: Int)
@@ -15,4 +18,6 @@ interface BaseAudio {
     fun resume() : Boolean
 
     fun stop()
+
+    fun getPlaybackState() : LiveData<PlaybackStateCompat?>
 }
