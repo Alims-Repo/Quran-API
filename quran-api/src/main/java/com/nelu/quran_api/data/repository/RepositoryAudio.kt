@@ -5,32 +5,42 @@ import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.nelu.quran_api.data.db.dao.DaoQari
 import com.nelu.quran_api.data.repository.base.BaseAudio
 import com.nelu.quran_api.di.QuranAPI
 import com.nelu.quran_api.service.AudioController
 
 class RepositoryAudio(
-    val application: Application
-) : AudioController(application), BaseAudio {
+    val daoQari: DaoQari
+) : AudioController(daoQari.context), BaseAudio {
 
     override fun playAyah(ayah: Int, qari: String) {
-        mediaController.transportControls.play()
+        if (isReady())
+            mediaController.transportControls.play()
+        else Log.e("Error", "Media Controller is not ready")
     }
 
     override fun playSurah(surah: Int, qari: String) {
-        TODO("Not yet implemented")
+        if (isReady())
+            mediaController.transportControls.play()
+        else Log.e("Error", "Media Controller is not ready")
     }
 
     override fun playJuz(juz: Int, qari: String) {
-        TODO("Not yet implemented")
+        if (isReady())
+            mediaController.transportControls.play()
+        else Log.e("Error", "Media Controller is not ready")
     }
 
     override fun playPage(page: Int, qari: String) {
-        TODO("Not yet implemented")
+        if (isReady())
+            mediaController.transportControls.play()
+        else Log.e("Error", "Media Controller is not ready")
     }
 
     override fun pause() {
-        mediaController.transportControls.pause()
+        if (mediaController.playbackState?.state == PlaybackStateCompat.STATE_PLAYING)
+            mediaController.transportControls.pause()
     }
 
     override fun resume(): Boolean {

@@ -5,10 +5,13 @@ import android.content.ComponentName
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import com.nelu.quran_api.data.db.ImplJuz
+import com.nelu.quran_api.data.db.ImplQari
 import com.nelu.quran_api.data.db.ImplQuran
 import com.nelu.quran_api.data.db.ImplSurah
 import com.nelu.quran_api.data.db.ImplTranslation
 import com.nelu.quran_api.data.db.dao.DaoJuz
+import com.nelu.quran_api.data.db.dao.DaoPage
+import com.nelu.quran_api.data.db.dao.DaoQari
 import com.nelu.quran_api.data.db.dao.DaoQuran
 import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.dao.DaoTranslation
@@ -37,8 +40,10 @@ object QuranAPI : BaseAPI {
 
     // DAO instances for accessing data
     private lateinit var daoJuz: DaoJuz
+    private lateinit var daoPage: DaoPage
     private lateinit var daoSurah: DaoSurah
     private lateinit var daoQuran: DaoQuran
+    private lateinit var daoQari: DaoQari
     private lateinit var daoTranslation: DaoTranslation
 
     // Repository instances for providing data operations
@@ -84,9 +89,8 @@ object QuranAPI : BaseAPI {
             daoJuz = ImplJuz(this)
             daoSurah = ImplSurah(this)
             daoQuran = ImplQuran(this)
+            daoQari = ImplQari(this)
             daoTranslation = ImplTranslation(this)
-
-            audio = RepositoryAudio(this)
         }
 
         // Configure each repository with the DAO instance for data access
@@ -94,6 +98,7 @@ object QuranAPI : BaseAPI {
         page = RepositoryPage(daoSurah)
         surah = RepositorySurah(daoSurah)
         quran = RepositoryQuran(daoQuran)
+        audio = RepositoryAudio(daoQari)
         translation = RepositoryTranslation(app, daoTranslation)
     }
 }

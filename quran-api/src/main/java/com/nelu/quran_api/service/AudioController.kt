@@ -2,15 +2,17 @@ package com.nelu.quran_api.service
 
 import android.app.Application
 import android.content.ComponentName
+import android.content.Context
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.MutableLiveData
 
 open class AudioController(
-    application: Application
+    context: Context
 ) {
 
+    // Must have lateinit for mediaBrowser
     private lateinit var mediaBrowser: MediaBrowserCompat
 
     protected lateinit var mediaController: MediaControllerCompat
@@ -26,7 +28,7 @@ open class AudioController(
     private val connectionCallback = object : MediaBrowserCompat.ConnectionCallback() {
         override fun onConnected() {
             mediaController = MediaControllerCompat(
-                application,
+                context,
                 mediaBrowser.sessionToken
             ).apply {
                 registerCallback(controllerCallback)
@@ -44,11 +46,13 @@ open class AudioController(
 
     init {
         mediaBrowser = MediaBrowserCompat(
-            application,
-            ComponentName(application, AudioService::class.java),
+            context,
+            ComponentName(context, AudioService::class.java),
             connectionCallback,
             null
         )
         mediaBrowser.connect()
     }
+
+    protected fun isReady() = ::mediaController.isInitialized
 }
