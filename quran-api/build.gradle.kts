@@ -66,7 +66,7 @@ publishing {
         create<MavenPublication>("bar") {
             groupId = "com.nelu"
             artifactId = "quran-api"
-            version = "0.9.1-beta"
+            version = "0.9.2-beta"
 
             artifact("${buildDir}/outputs/aar/quran-api-release.aar")
         }
@@ -74,7 +74,7 @@ publishing {
         repositories {
             maven {
                 name = "GithubPackages"
-                url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
+                url = uri("https://maven.pkg.github.com/Alims-Repo/Quran-API")
                 credentials {
                     username = credentialsProperties.getProperty("gpr.user")
                     password = credentialsProperties.getProperty("gpr.token")

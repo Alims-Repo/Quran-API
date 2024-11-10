@@ -1,6 +1,7 @@
 package com.nelu.alquran
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -68,6 +69,7 @@ class SplashActivity : AppCompatActivity() {
 
             // Quran
             binding.getQuranList.id -> measure { QuranAPI.QURAN.getQuranList(list) }
+            binding.getQuranByPage.id -> measure { QuranAPI.QURAN.getQuranByPage(list) }
             binding.searchQuran.id -> measure(false) {
                 QuranAPI.QURAN.searchQuran(binding.input.text.toString(), list)
             }

@@ -126,20 +126,9 @@ class ImplQuran(
         }
     }
 
-    /**
-     * # ModelSearchQuran
-     *
-     * A data model to facilitate efficient search operations by storing Quranic Ayah content
-     * in binary format. Each instance of `ModelSearchQuran` represents an Ayah with its Arabic
-     * text and translations stored as byte arrays.
-     *
-     * @property id The unique ID of the Ayah.
-     * @property arabicBinary A byte array representing the binary form of the Arabic text.
-     * @property translationBinary A list of byte arrays for the translations of the Ayah.
-     */
-    data class ModelSearchQuran(
-        val id: Int,
-        val arabicBinary: ByteArray,
-        val translationBinary: List<ByteArray>
-    )
+    override fun getQuranByPage(translations: List<String>): List<Pair<Int, List<ModelQuran>>> {
+        return quranList(translations).groupBy { it.page }.map { (page, ayahs) ->
+            Pair(page, ayahs)
+        }
+    }
 }

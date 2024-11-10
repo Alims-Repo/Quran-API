@@ -113,4 +113,8 @@ class RepositoryQuran(
     ): ModelQuran? {
         return daoQuran.getQuranForSurahAndAyah(surahId, ayahId, translations)
     }
+
+    override fun getQuranByPage(translations: List<String>): List<Pair<Int, List<ModelQuran>>> {
+        return daoQuran.getQuranByPage(translations)
+    }
 }

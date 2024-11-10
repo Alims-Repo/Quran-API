@@ -74,4 +74,6 @@ interface DaoQuran {
      * @return A [ModelQuran] object for the specified Surah and Ayah, or `null` if not found.
      */
     fun getQuranForSurahAndAyah(surahId: Int, ayahId: Int, translations: List<String>): ModelQuran?
+
+    fun getQuranByPage(translations: List<String>) : List<Pair<Int, List<ModelQuran>>>
 }
