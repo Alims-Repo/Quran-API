@@ -40,7 +40,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven {
-            url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
+            url = uri("https://maven.pkg.github.com/Alims-Repo/Quran-API")
         }
     }
 }
@@ -49,7 +49,7 @@ dependencyResolutionManagement {
 ### Step 2: Add the Dependency
 Add the quran-api dependency to your `build.gradle` file:
 ```kotlin
-implementation("com.nelu:quran-api:0.9.1-beta")
+implementation("com.nelu:quran-api:0.9.3-beta")
 ```
 Alternatively, you can clone the repository and add the quran-api module manually:
 
