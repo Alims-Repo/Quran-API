@@ -1,34 +1,31 @@
 package com.nelu.quran_api.data.repository
 
 import android.app.Application
-import android.content.ComponentName
-import android.content.Intent
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.session.MediaControllerCompat
+import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.nelu.quran_api.data.repository.base.BaseAudio
+import com.nelu.quran_api.di.QuranAPI
 import com.nelu.quran_api.service.AudioController
-import com.nelu.quran_api.service.AudioService
 
 class RepositoryAudio(
     val application: Application
 ) : AudioController(application), BaseAudio {
 
-    override fun playAyah(ayah: Int) {
+    override fun playAyah(ayah: Int, qari: String) {
         mediaController.transportControls.play()
     }
 
-    override fun playSurah(surah: Int) {
+    override fun playSurah(surah: Int, qari: String) {
         TODO("Not yet implemented")
     }
 
-    override fun playJuz(juz: Int) {
+    override fun playJuz(juz: Int, qari: String) {
         TODO("Not yet implemented")
     }
 
-    override fun playPage(page: Int) {
+    override fun playPage(page: Int, qari: String) {
         TODO("Not yet implemented")
     }
 
@@ -37,10 +34,18 @@ class RepositoryAudio(
     }
 
     override fun resume(): Boolean {
-        TODO("Not yet implemented")
+        if (mediaController.playbackState?.state == PlaybackStateCompat.STATE_PAUSED) {
+            mediaController.transportControls.play()
+            return true
+        }
+        return false
     }
 
     override fun stop() {
+        mediaController.transportControls.stop()
+    }
+
+    override fun getQaris(): List<String> {
         TODO("Not yet implemented")
     }
 

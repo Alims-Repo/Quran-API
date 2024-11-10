@@ -3,12 +3,13 @@ package com.nelu.quran_api.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
+import androidx.core.os.bundleOf
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ConcatenatingMediaSource
@@ -18,6 +19,7 @@ import androidx.media3.session.MediaSessionService
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media.app.NotificationCompat.MediaStyle
+import androidx.media3.common.util.Log
 import kotlinx.coroutines.*
 import java.io.File
 import java.net.URL
@@ -48,6 +50,8 @@ class AudioService : MediaSessionService() {
                 "https://cdn.islamic.network/quran/audio/64/ar.alafasy/${i+1}.mp3"
             )
         }
+
+        Log.e("START", "ONSTART")
 
         player.setMediaSource(concatenatingMediaSource)
         player.prepare()
@@ -128,17 +132,17 @@ class AudioService : MediaSessionService() {
             )
             .addAction(
                 NotificationCompat.Action(
-                    androidx.media3.session.R.drawable.media3_notification_pause, "Pause", getActionIntent(ACTION_PAUSE)
+                    androidx.media3.session.R.drawable.media3_icon_pause, "Pause", getActionIntent(ACTION_PAUSE)
                 )
             )
             .addAction(
                 NotificationCompat.Action(
-                    androidx.media3.session.R.drawable.media3_notification_play, "Play", getActionIntent(ACTION_PLAY)
+                    androidx.media3.session.R.drawable.media3_icon_play, "Play", getActionIntent(ACTION_PLAY)
                 )
             )
             .addAction(
                 NotificationCompat.Action(
-                    androidx.media3.session.R.drawable.media3_notification_pause, "Stop", getActionIntent(ACTION_STOP)
+                    androidx.media3.session.R.drawable.media3_icon_stop, "Stop", getActionIntent(ACTION_STOP)
                 )
             )
             .build()

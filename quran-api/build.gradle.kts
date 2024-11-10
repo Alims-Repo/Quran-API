@@ -49,9 +49,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
 
-    implementation("androidx.media:media:1.6.0")
-    implementation("androidx.media3:media3-session:1.1.1")
-    implementation("androidx.media3:media3-exoplayer:1.1.1")
+    implementation("androidx.media:media:1.7.0")
+    implementation("androidx.media3:media3-session:1.4.1")
+    implementation("androidx.media3:media3-exoplayer:1.4.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

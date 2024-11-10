@@ -67,8 +67,6 @@ object QuranAPI : BaseAPI {
     /** Provides access to Translation-related data and operations */
     override val TRANSLATION: BaseTranslation get() = translation
 
-    lateinit var application: Application
-
     /**
      * Initializes the QuranAPI object with necessary repository and DAO instances.
      *
@@ -80,7 +78,6 @@ object QuranAPI : BaseAPI {
      */
     fun init(app: Application) {
         app.run {
-            application = this
             applicationContext.restoreData()
 
             // Initialize DAOs with the application context
@@ -88,6 +85,7 @@ object QuranAPI : BaseAPI {
             daoSurah = ImplSurah(this)
             daoQuran = ImplQuran(this)
             daoTranslation = ImplTranslation(this)
+
             audio = RepositoryAudio(this)
         }
 
