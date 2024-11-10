@@ -1,13 +1,13 @@
 package com.nelu.quran_api.di
 
 import android.content.Context
+import com.nelu.quran_api.R
 import com.nelu.quran_api.data.repository.base.BaseJuz
 import com.nelu.quran_api.data.repository.base.BasePage
 import com.nelu.quran_api.data.repository.base.BaseQuran
 import com.nelu.quran_api.data.repository.base.BaseSurah
 import com.nelu.quran_api.data.repository.base.BaseTranslation
 import java.io.File
-import com.nelu.quran_api.R
 import java.io.FileOutputStream
 
 /**

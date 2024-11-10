@@ -1,13 +1,10 @@
 package com.nelu.quran_api
 
 import android.app.Application
-import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.nelu.quran_api.data.repository.base.BaseTranslation
 import com.nelu.quran_api.di.QuranAPI
 import org.junit.Test
-
 import org.junit.runner.RunWith
 
 /**

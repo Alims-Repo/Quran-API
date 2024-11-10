@@ -1,7 +1,7 @@
 package com.nelu.quran_api.binary
 
-import com.nelu.quran_api.R
 import android.content.Context
+import com.nelu.quran_api.R
 import com.nelu.quran_api.data.model.ModelTranslator
 import java.nio.ByteBuffer
 import java.nio.channels.Channels

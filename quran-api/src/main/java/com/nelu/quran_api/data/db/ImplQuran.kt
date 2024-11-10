@@ -1,12 +1,9 @@
 package com.nelu.quran_api.data.db
 
 import android.app.Application
-import android.util.Log
 import com.nelu.quran_api.binary.BinaryQuran
 import com.nelu.quran_api.data.db.dao.DaoQuran
 import com.nelu.quran_api.data.model.ModelQuran
-import java.nio.charset.StandardCharsets
-import java.text.Normalizer
 
 /**
  * # ImplQuran
