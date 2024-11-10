@@ -3,82 +3,111 @@ package com.nelu.quran_api.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.OptIn
 import androidx.core.app.NotificationCompat
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.MediaSession
-import androidx.media3.session.MediaSessionService
-import androidx.media.app.NotificationCompat.MediaStyle
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultDataSourceFactory
 import androidx.media3.exoplayer.source.ConcatenatingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import com.nelu.quran_api.R
+import androidx.media3.session.MediaSession
+import androidx.media3.session.MediaSessionService
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media.app.NotificationCompat.MediaStyle
+import kotlinx.coroutines.*
+import java.io.File
+import java.net.URL
 
+@OptIn(UnstableApi::class)
 class AudioService : MediaSessionService() {
 
-    private lateinit var mediaSession: MediaSession
     private lateinit var player: ExoPlayer
+    private lateinit var mediaSession: MediaSession
+    private lateinit var concatenatingMediaSource: ConcatenatingMediaSource
 
-    @OptIn(UnstableApi::class)
+    private val job = Job()
+    private val scope = CoroutineScope(Dispatchers.IO + job)
+
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize ExoPlayer
+        // Initialize ExoPlayer and MediaSession
         player = ExoPlayer.Builder(this).build()
-
-        // Initialize MediaSession
         mediaSession = MediaSession.Builder(this, player).build()
 
-        // Create a list of MediaItems for the playlist
-//        val mediaItems = listOf(
-//            MediaItem.fromUri("https://download.samplelib.com/mp3/sample-15s.mp3"),
-//            MediaItem.fromUri("https://download.samplelib.com/mp3/sample-12s.mp3"),
-//            MediaItem.fromUri("https://download.samplelib.com/mp3/sample-9s.mp3")
-//        )
-
-        val mediaItems = listOf(
-            "https://cdn.islamic.network/quran/audio/64/ar.alafasy/1.mp3",
-            "https://download.samplelib.com/mp3/sample-12s.mp3",
-            "https://download.samplelib.com/mp3/sample-9s.mp3"
-        )
-
-        val concatenatingMediaSource = ConcatenatingMediaSource()
+        concatenatingMediaSource = ConcatenatingMediaSource()
 
         repeat(10) { i->
-            val mediaItem = MediaItem.fromUri("https://cdn.islamic.network/quran/audio/64/ar.alafasy/${i+1}.mp3")
-            val mediaSource = ProgressiveMediaSource.Factory(DefaultDataSourceFactory(this))
-                .createMediaSource(mediaItem)
-            concatenatingMediaSource.addMediaSource(mediaSource)
+            addMediaItemWithBackgroundDownload(
+                "https://cdn.islamic.network/quran/audio/64/ar.alafasy/${i+1}.mp3"
+            )
         }
-//
-//        // Add each media item to the concatenating media source
-//        for (url in mediaItems) {
-//            val mediaItem = MediaItem.fromUri(url)
-//            val mediaSource = ProgressiveMediaSource.Factory(DefaultDataSourceFactory(this))
-//                .createMediaSource(mediaItem)
-//            concatenatingMediaSource.addMediaSource(mediaSource)
-//        }
 
-        // Set the concatenated media source to ExoPlayer
         player.setMediaSource(concatenatingMediaSource)
-
-
-
-
-
-        // Add media items to the player
-//        player.setMediaItems(mediaItems)
         player.prepare()
-
-        // Start playback
         player.play()
 
-        // Start foreground service with notification
         startForegroundService()
+    }
+
+    private fun addMediaItemWithBackgroundDownload(url: String) {
+        checkFile(url)?.let { localPath->
+            concatenatingMediaSource.addMediaSource(
+                ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
+                    .createMediaSource(
+                        MediaItem.fromUri(localPath)
+                    )
+            )
+        } ?: run {
+            val mediaItem = MediaItem.fromUri(url)
+            val mediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this))
+                .createMediaSource(mediaItem)
+
+            concatenatingMediaSource.addMediaSource(mediaSource)
+
+            scope.launch {
+                val localPath = downloadFile(url)
+                if (localPath != null) {
+                    val index = concatenatingMediaSource.size - 1
+                    val localMediaItem = MediaItem.fromUri(localPath)
+                    val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
+                        .createMediaSource(localMediaItem)
+                    withContext(Dispatchers.Main) {
+                        concatenatingMediaSource.removeMediaSource(index)
+                        concatenatingMediaSource.addMediaSource(index, localMediaSource)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkFile(url: String) : Uri? {
+        val fileName = Uri.parse(url).lastPathSegment ?: return null
+        val file = File(applicationContext.filesDir, "audio/al_afasy/$fileName")
+        return if (file.exists()) Uri.fromFile(file) else null
+    }
+
+    // Download file and return local path
+    private suspend fun downloadFile(url: String): Uri? = withContext(Dispatchers.IO) {
+        try {
+            val file = File(
+                applicationContext.filesDir,
+                "audio/al_afasy/${Uri.parse(url).lastPathSegment 
+                    ?: return@withContext null}"
+            )
+
+            file.parentFile?.mkdirs()
+            file.writeBytes(URL(url).readBytes())
+
+            return@withContext Uri.fromFile(file)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     private fun startForegroundService() {
@@ -93,7 +122,7 @@ class AudioService : MediaSessionService() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Playing Audio")
             .setContentText("Your audio is playing")
-            .setSmallIcon(androidx.media3.session.R.drawable.media3_notification_small_icon) // Replace with your icon
+            .setSmallIcon(androidx.media3.session.R.drawable.media3_notification_small_icon)
             .setContentIntent(pendingIntent)
             .setStyle(
                 MediaStyle()
@@ -112,7 +141,7 @@ class AudioService : MediaSessionService() {
             )
             .addAction(
                 NotificationCompat.Action(
-                    androidx.media3.session.R.drawable.media3_notification_seek_to_previous, "Stop", getActionIntent(ACTION_STOP)
+                    androidx.media3.session.R.drawable.media3_notification_pause, "Stop", getActionIntent(ACTION_STOP)
                 )
             )
             .build()
@@ -136,7 +165,7 @@ class AudioService : MediaSessionService() {
                 "Audio Playback",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Audio playback controls"
+                description = "Quran Audio playback controls"
             }
             val notificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
@@ -146,6 +175,7 @@ class AudioService : MediaSessionService() {
     override fun onDestroy() {
         player.release()
         mediaSession.release()
+        job.cancel()
         super.onDestroy()
     }
 
