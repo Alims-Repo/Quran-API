@@ -54,7 +54,7 @@ implementation("com.nelu:quran-api:0.9.3-beta")
 Alternatively, you can clone the repository and add the quran-api module manually:
 
 ```bash
-git clone https://github.com/Alims-Repo/Al-Quran-API.git
+git clone https://github.com/Alims-Repo/Quran-API.git
 ```
 
 
