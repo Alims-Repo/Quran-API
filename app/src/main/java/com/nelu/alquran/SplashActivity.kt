@@ -8,6 +8,10 @@ import androidx.core.widget.doAfterTextChanged
 import com.nelu.alquran.databinding.ActivitySplashBinding
 import com.nelu.quran_api.data.repository.base.BaseTranslation
 import com.nelu.quran_api.di.QuranAPI
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.time.measureTime
 
 class SplashActivity : AppCompatActivity() {
@@ -23,6 +27,11 @@ class SplashActivity : AppCompatActivity() {
             measure(false) {
                 QuranAPI.QURAN.searchQuran(it.toString(), list)
             }
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(1000L)
+            QuranAPI.AUDIO.playAyah(0)
         }
     }
 

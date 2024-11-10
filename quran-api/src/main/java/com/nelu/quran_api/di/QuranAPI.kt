@@ -9,16 +9,19 @@ import com.nelu.quran_api.data.db.dao.DaoJuz
 import com.nelu.quran_api.data.db.dao.DaoQuran
 import com.nelu.quran_api.data.db.dao.DaoSurah
 import com.nelu.quran_api.data.db.dao.DaoTranslation
+import com.nelu.quran_api.data.repository.RepositoryAudio
 import com.nelu.quran_api.data.repository.RepositoryJuz
 import com.nelu.quran_api.data.repository.RepositoryPage
 import com.nelu.quran_api.data.repository.RepositoryQuran
 import com.nelu.quran_api.data.repository.RepositorySurah
 import com.nelu.quran_api.data.repository.RepositoryTranslation
+import com.nelu.quran_api.data.repository.base.BaseAudio
 import com.nelu.quran_api.data.repository.base.BaseJuz
 import com.nelu.quran_api.data.repository.base.BasePage
 import com.nelu.quran_api.data.repository.base.BaseQuran
 import com.nelu.quran_api.data.repository.base.BaseSurah
 import com.nelu.quran_api.data.repository.base.BaseTranslation
+import com.nelu.quran_api.service.AudioService
 
 /**
  * # QuranAPI
@@ -40,6 +43,7 @@ object QuranAPI : BaseAPI {
     private lateinit var page: BasePage
     private lateinit var surah: BaseSurah
     private lateinit var quran: BaseQuran
+    private lateinit var audio: BaseAudio
     private lateinit var translation: BaseTranslation
 
     /** Provides access to Juz-related data and operations */
@@ -54,8 +58,13 @@ object QuranAPI : BaseAPI {
     /** Provides access to Quran-related data and operations */
     override val QURAN: BaseQuran get() = quran
 
+    /** Provides access to Quran-related data and operations */
+    override val AUDIO: BaseAudio get() = audio
+
     /** Provides access to Translation-related data and operations */
     override val TRANSLATION: BaseTranslation get() = translation
+
+    lateinit var application: Application
 
     /**
      * Initializes the QuranAPI object with necessary repository and DAO instances.
@@ -68,6 +77,7 @@ object QuranAPI : BaseAPI {
      */
     fun init(app: Application) {
         app.run {
+            application = this
             applicationContext.restoreData()
 
             // Initialize DAOs with the application context
@@ -75,6 +85,7 @@ object QuranAPI : BaseAPI {
             daoSurah = ImplSurah(this)
             daoQuran = ImplQuran(this)
             daoTranslation = ImplTranslation(this)
+            audio = RepositoryAudio(this)
         }
 
         // Configure each repository with the DAO instance for data access
