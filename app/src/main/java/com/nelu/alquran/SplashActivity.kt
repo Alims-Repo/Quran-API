@@ -30,10 +30,10 @@ class SplashActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1000L)
-            QuranAPI.AUDIO.playSurah(2)
+            delay(3000L)
+            QuranAPI.AUDIO.playSurah(1)
             delay(5000L)
-            QuranAPI.AUDIO.playSurah(2)
+            QuranAPI.AUDIO.playSurah(114)
         }
     }
 

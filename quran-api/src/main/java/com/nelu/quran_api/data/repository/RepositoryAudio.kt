@@ -9,6 +9,7 @@ import com.nelu.quran_api.data.db.dao.DaoQari
 import com.nelu.quran_api.data.repository.base.BaseAudio
 import com.nelu.quran_api.di.QuranAPI
 import com.nelu.quran_api.service.AudioController
+import com.nelu.quran_api.service.AudioService
 
 class RepositoryAudio(
     val daoQari: DaoQari
@@ -22,7 +23,9 @@ class RepositoryAudio(
 
     override fun playSurah(surah: Int, qari: String) {
         if (isReady())
-            mediaController.transportControls.play()
+            QuranAPI.SURAH.getSurahById(surah)?.run {
+                AudioService.audioService.play(startId, numberOfAyahs)
+            }
         else Log.e("Error", "Media Controller is not ready")
     }
 

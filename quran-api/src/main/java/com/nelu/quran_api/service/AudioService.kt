@@ -3,6 +3,7 @@ package com.nelu.quran_api.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -27,6 +28,8 @@ import java.net.URL
 @OptIn(UnstableApi::class)
 class AudioService : MediaSessionService() {
 
+    private var foreground = false
+
     private val player: ExoPlayer by lazy {
         ExoPlayer.Builder(this).build()
     }
@@ -42,22 +45,30 @@ class AudioService : MediaSessionService() {
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    override fun onCreate() {
-        super.onCreate()
+    fun play(start: Int, count: Int) {
+        player.pause()
+        player.clearMediaItems()
+        concatenatingMediaSource.clear()
 
-        repeat(10) { i->
+        repeat(count) { i->
             addMediaItemWithBackgroundDownload(
-                "https://cdn.islamic.network/quran/audio/64/ar.alafasy/${i+1}.mp3"
+                "https://cdn.islamic.network/quran/audio/64/ar.alafasy/${i+start}.mp3"
             )
         }
-
-        Log.e("START", "ONSTART")
 
         player.setMediaSource(concatenatingMediaSource)
         player.prepare()
         player.play()
 
-        startForegroundService()
+        if (foreground.not()) {
+            Log.e("Foreground", "Triggered.")
+            startForegroundService()
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        audioService = this
     }
 
     private fun addMediaItemWithBackgroundDownload(url: String) {
@@ -112,6 +123,7 @@ class AudioService : MediaSessionService() {
     }
 
     private fun startForegroundService() {
+        foreground = true
         createNotificationChannel()
 
         val notificationIntent = Intent(this, AudioService::class.java)
@@ -174,6 +186,7 @@ class AudioService : MediaSessionService() {
     }
 
     override fun onDestroy() {
+        foreground = false
         player.release()
         mediaSession.release()
         job.cancel()
@@ -186,9 +199,11 @@ class AudioService : MediaSessionService() {
 
     companion object {
         const val CHANNEL_ID = "AudioServiceChannel"
-        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_ID = 13001
         const val ACTION_PLAY = "com.nelu.quran_api.service.ACTION_PLAY"
         const val ACTION_PAUSE = "com.nelu.quran_api.service.ACTION_PAUSE"
         const val ACTION_STOP = "com.nelu.quran_api.service.ACTION_STOP"
+
+        lateinit var audioService: AudioService
     }
 }
