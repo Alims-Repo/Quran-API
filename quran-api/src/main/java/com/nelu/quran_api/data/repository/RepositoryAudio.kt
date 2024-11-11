@@ -17,7 +17,7 @@ class RepositoryAudio(
 
     override fun playAyah(ayah: Int, qari: String) {
         if (isReady())
-            mediaController.transportControls.play()
+            AudioService.audioService.play(ayah, 1)
         else Log.e("Error", "Media Controller is not ready")
     }
 
@@ -31,14 +31,18 @@ class RepositoryAudio(
 
     override fun playJuz(juz: Int, qari: String) {
         if (isReady())
-            mediaController.transportControls.play()
+            QuranAPI.JUZ.getJuzById(juz)?.run {
+                AudioService.audioService.play(startId, totalAyah)
+            }
         else Log.e("Error", "Media Controller is not ready")
     }
 
     override fun playPage(page: Int, qari: String) {
-        if (isReady())
-            mediaController.transportControls.play()
-        else Log.e("Error", "Media Controller is not ready")
+//        if (isReady())
+//            QuranAPI.JUZ.getJuzById(juz)?.run {
+//                AudioService.audioService.play(startId, totalAyah)
+//            }
+//        else Log.e("Error", "Media Controller is not ready")
     }
 
     override fun pause() {

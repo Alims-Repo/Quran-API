@@ -21,6 +21,8 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media.app.NotificationCompat.MediaStyle
 import androidx.media3.common.util.Log
+import com.nelu.quran_api.data.constant.Audio
+import com.nelu.quran_api.data.constant.Audio.audioUrl
 import kotlinx.coroutines.*
 import java.io.File
 import java.net.URL
@@ -51,9 +53,11 @@ class AudioService : MediaSessionService() {
         concatenatingMediaSource.clear()
 
         repeat(count) { i->
-            addMediaItemWithBackgroundDownload(
-                "https://cdn.islamic.network/quran/audio/64/ar.alafasy/${i+start}.mp3"
-            )
+            (i+start).audioUrl().let { audio->
+                addMediaItemWithBackgroundDownload(
+                    audio.first.replace(".", "_"), audio.second
+                )
+            }
         }
 
         player.setMediaSource(concatenatingMediaSource)
@@ -71,16 +75,16 @@ class AudioService : MediaSessionService() {
         audioService = this
     }
 
-    private fun addMediaItemWithBackgroundDownload(url: String) {
+    private fun addMediaItemWithBackgroundDownload(name: String, url: String) {
         concatenatingMediaSource.addMediaSource(
             ProgressiveMediaSource.Factory(
                 DefaultDataSource.Factory(this)
             ).createMediaSource(
-                checkFile(url)?.let { localPath->
+                checkFile(name, url)?.let { localPath->
                     MediaItem.fromUri(localPath)
                 } ?: run {
                     scope.launch {
-                        downloadFile(url)?.let { localPath->
+                        downloadFile(name, url)?.let { localPath->
                             val index = concatenatingMediaSource.size - 1
                             val localMediaItem = MediaItem.fromUri(localPath)
                             val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
@@ -97,18 +101,18 @@ class AudioService : MediaSessionService() {
         )
     }
 
-    private fun checkFile(url: String) : Uri? {
+    private fun checkFile(name: String, url: String) : Uri? {
         val fileName = Uri.parse(url).lastPathSegment ?: return null
-        val file = File(applicationContext.filesDir, "audio/al_afasy/$fileName")
+        val file = File(applicationContext.filesDir, "audio/$name/$fileName")
         return if (file.exists()) Uri.fromFile(file) else null
     }
 
     // Download file and return local path
-    private suspend fun downloadFile(url: String): Uri? = withContext(Dispatchers.IO) {
+    private suspend fun downloadFile(name: String, url: String): Uri? = withContext(Dispatchers.IO) {
         try {
             val file = File(
                 applicationContext.filesDir,
-                "audio/al_afasy/${Uri.parse(url).lastPathSegment 
+                "audio/$name/${Uri.parse(url).lastPathSegment 
                     ?: return@withContext null}"
             )
 
