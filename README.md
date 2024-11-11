@@ -1,7 +1,7 @@
 
 # Quran API
 
-The `quran-api` is a feature-rich Android library designed to access, search, and manage Quranic data, including translations, Surahs, Juz, pages, and Ayahs. This library provides developers with a structured API for accessing the Quran's data in an efficient and memory-friendly way, leveraging binary file storage for faster data retrieval.
+The `quran-api` is a feature-rich Android library designed to access, search, and manage Quranic data, including translations, Surahs, Juz, pages, Ayahs, and now audio playback. This library provides developers with a structured API for accessing the Quran's data in an efficient and memory-friendly way, leveraging binary file storage for faster data retrieval.
 
 ## Features
 
@@ -10,6 +10,7 @@ The `quran-api` is a feature-rich Android library designed to access, search, an
 - **Optimized Storage**: Binary file storage for quick access and memory efficiency.
 - **Easy Data Queries**: Simple and intuitive API for querying Quranic data.
 - **Extensible Architecture**: Modular and interface-based design for easy customization.
+- **Quran Audio Playback**: Stream or play audio from a local file with support for multiple Qaris. The API can auto-download audio files as needed and prioritize playback from local storage for offline accessibility.
 
 ## Table of Contents
 
@@ -20,6 +21,9 @@ The `quran-api` is a feature-rich Android library designed to access, search, an
   - [Accessing Quranic Data](#accessing-quranic-data)
   - [Managing Translations](#managing-translations)
   - [Downloading Translations](#downloading-translations)
+- [Audio Playback](#audio-playback)
+  - [Playing Quran Audio](#playing-quran-audio)
+  - [Managing Qaris](#managing-qaris)
 - [Interfaces Overview](#interfaces-overview)
 - [Core Classes](#core-classes)
 - [JNI Integration](#jni-integration)
@@ -56,7 +60,6 @@ Alternatively, you can clone the repository and add the quran-api module manuall
 ```bash
 git clone https://github.com/Alims-Repo/Quran-API.git
 ```
-
 
 ## Quick Start
 
@@ -153,6 +156,31 @@ QuranAPI.TRANSLATION.downloadTranslation(translationCode, object : BaseTranslati
 })
 ```
 
+## Audio Playback
+
+The `quran-api` now supports Quran audio playback with dynamic downloading and offline play options.
+
+### Playing Quran Audio
+
+You can play audio for a specific Ayah, Surah, or range. Audio playback can automatically download files for offline playback. If an audio file is available locally, it will be used instead of streaming.
+
+#### Example: Playing Audio
+
+```kotlin
+QuranAPI.Audio.playAyah(ayahId = 5) // Plays the specified Ayah
+```
+
+### Managing Qaris
+
+The API provides support for multiple Qaris. By specifying a Qari, you can play the preferred recitation style.
+
+#### Example: Set Qari and Play
+
+```kotlin
+QuranAPI.Audio.setQari("alafasy")
+QuranAPI.Audio.playSurah(surahId = 2)
+```
+
 ## Interfaces Overview
 
 The library is designed with interfaces to ensure flexibility and ease of use. Here’s an overview of the core interfaces:
@@ -176,6 +204,7 @@ The `QuranAPI` singleton centralizes access to all repository instances and hand
 - **SURAH**
 - **QURAN**
 - **TRANSLATION**
+- **AUDIO**
 
 ### Repository Classes
 
