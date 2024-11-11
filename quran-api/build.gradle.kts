@@ -49,9 +49,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
 
-    implementation("androidx.media:media:1.7.0")
-    implementation("androidx.media3:media3-session:1.4.1")
-    implementation("androidx.media3:media3-exoplayer:1.4.1")
+    implementation(libs.androidx.media)
+    implementation(libs.androidx.media3.session)
+    implementation(libs.androidx.media3.exoplayer)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -70,7 +70,7 @@ publishing {
         create<MavenPublication>("bar") {
             groupId = "com.nelu"
             artifactId = "quran-api"
-            version = "0.9.3-beta"
+            version = "0.9.4-beta"
 
             artifact("${buildDir}/outputs/aar/quran-api-release.aar")
         }
