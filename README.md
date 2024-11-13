@@ -1,3 +1,4 @@
+![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/quran-api.svg)
 
 # Quran API
 
