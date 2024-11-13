@@ -1,6 +1,11 @@
+<div align="center">
+
 | Platform | Min API | Maven Central | License |
 | -------- | ------- | ------------- | ------- |
 | ![Platform](https://img.shields.io/badge/platform-Android-blue.svg?style=flat-square) | ![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat-square) | ![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/quran-api.svg?style=flat-square) | ![License](https://img.shields.io/github/license/Alims-Repo/Quran-API.svg?style=flat-square) |
+
+</div>
+
 
 # Quran API
 
