@@ -16,8 +16,8 @@ The `quran-api` is a feature-rich Android library designed to access, search, an
   <tr>
     <td align="center"><img src="https://img.shields.io/badge/-Android-3DDC84?logo=android&logoColor=white&style=flat-square"></td>
     <td align="center"><img src="https://img.shields.io/badge/-21%2B-brightgreen.svg?style=flat-square"></td>
-    <td align="center"><img src="https://img.shields.io/badge/-0.9.4--beta-blueviolet.svg?style=flat-square"></td>
-    <td align="center"><img src="https://img.shields.io/badge/-GPL--3.0-blue.svg?style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/maven-central/v/io.github.alims-repo/quran-api.svg?label=&color=FF6D00&style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/github/license/Alims-Repo/Quran-API.svg?label=&color=007BFF&style=flat-square"></td>
   </tr>
 </table>
 
