@@ -1,8 +1,19 @@
 <div align="center">
 
-| Platform | Min API | Maven Central | License |
-| -------- | ------- | ------------- | ------- |
-| ![Platform](https://img.shields.io/badge/platform-Android-blue.svg?style=flat-square) | ![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat-square) | ![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/quran-api.svg?style=flat-square) | ![License](https://img.shields.io/github/license/Alims-Repo/Quran-API.svg?style=flat-square) |
+<table>
+  <tr>
+    <th align="center">Platform</th>
+    <th align="center">Min API</th>
+    <th align="center">Version</th>
+    <th align="center">License</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://img.shields.io/badge/-Android-3DDC84?logo=android&logoColor=white&style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/badge/-21%2B-brightgreen.svg?style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/badge/-0.9.4--beta-blueviolet.svg?style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/badge/-GPL--3.0-blue.svg?style=flat-square"></td>
+  </tr>
+</table>
 
 </div>
 
