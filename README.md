@@ -1,4 +1,10 @@
-<div align="center">
+# Quran API
+
+The `quran-api` is a feature-rich Android library designed to access, search, and manage Quranic data, including translations, Surahs, Juz, pages, Ayahs, and now audio playback. This library provides developers with a structured API for accessing the Quran's data in an efficient and memory-friendly way, leveraging binary file storage for faster data retrieval.
+
+## Versioning and Compatibility
+
+<div>
 
 <table>
   <tr>
@@ -17,10 +23,6 @@
 
 </div>
 
-
-# Quran API
-
-The `quran-api` is a feature-rich Android library designed to access, search, and manage Quranic data, including translations, Surahs, Juz, pages, Ayahs, and now audio playback. This library provides developers with a structured API for accessing the Quran's data in an efficient and memory-friendly way, leveraging binary file storage for faster data retrieval.
 
 ## Features
 
