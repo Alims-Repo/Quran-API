@@ -1,4 +1,7 @@
+![Platform](https://img.shields.io/badge/platform-Android-blue.svg)
+![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg)
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.alims-repo/quran-api.svg)
+![License](https://img.shields.io/github/license/Alims-Repo/Quran-API.svg)
 
 # Quran API
 
