@@ -1,7 +1,28 @@
-
 # Quran API
 
 The `quran-api` is a feature-rich Android library designed to access, search, and manage Quranic data, including translations, Surahs, Juz, pages, Ayahs, and now audio playback. This library provides developers with a structured API for accessing the Quran's data in an efficient and memory-friendly way, leveraging binary file storage for faster data retrieval.
+
+## Versioning and Compatibility
+
+<div>
+
+<table>
+  <tr>
+    <th align="center">Platform</th>
+    <th align="center">Min API</th>
+    <th align="center">Version</th>
+    <th align="center">License</th>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://img.shields.io/badge/-Android-3DDC84?logo=android&logoColor=white&style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/badge/-21%2B-brightgreen.svg?style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/maven-central/v/io.github.alims-repo/quran-api.svg?label=&color=FF6D00&style=flat-square"></td>
+    <td align="center"><img src="https://img.shields.io/github/license/Alims-Repo/Quran-API.svg?label=&color=007BFF&style=flat-square"></td>
+  </tr>
+</table>
+
+</div>
+
 
 ## Features
 
@@ -32,30 +53,15 @@ The `quran-api` is a feature-rich Android library designed to access, search, an
 
 ## Installation
 
-To add the `quran-api` library to your Android project, add the following Maven repository and dependency to your project.
+To add the `quran-api` library to your Android project, add the following Maven Central dependency to your project.
 
-### Step 1: Configure Repository Access
-Add the following to your `settings.gradle.kts` to configure the GitHub Packages repository:
-
+### Step 1: Add the Dependency
+Add the `quran-api` dependency to your `build.gradle` file:
 ```kotlin
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/Alims-Repo/Quran-API")
-        }
-    }
-}
+implementation("io.github.alims-repo:quran-api:0.9.4-beta")
 ```
 
-### Step 2: Add the Dependency
-Add the quran-api dependency to your `build.gradle` file:
-```kotlin
-implementation("com.nelu:quran-api:0.9.3-beta")
-```
-Alternatively, you can clone the repository and add the quran-api module manually:
+Alternatively, you can clone the repository and add the `quran-api` module manually:
 
 ```bash
 git clone https://github.com/Alims-Repo/Quran-API.git
