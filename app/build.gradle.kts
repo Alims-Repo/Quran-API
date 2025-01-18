@@ -48,7 +48,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-//    implementation(libs.quran.api)
     implementation(project(":quran-api"))
 
     testImplementation(libs.junit)

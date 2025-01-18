@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
 
-    implementation("io.github.alims-repo:nc-base:0.3.5-alpha")
+    implementation("io.github.alims-repo:nc-base:0.3.6-alpha")
 
     implementation(libs.androidx.media)
     implementation(libs.androidx.media3.session)
