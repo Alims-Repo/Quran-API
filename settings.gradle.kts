@@ -1,3 +1,9 @@
+import java.util.Properties
+import kotlin.apply
+
+include(":nelu-license")
+
+
 pluginManagement {
     repositories {
         google {
@@ -17,9 +23,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/Alims-Repo/Al-Quran-API")
-        }
     }
 }
 

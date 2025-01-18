@@ -1,43 +1,34 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = "com.nelu.alquran"
-    compileSdk = 35
+    namespace = "com.nelu.license"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.nelu.alquran"
-        minSdk = 23
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 22
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
     kotlinOptions {
         jvmTarget = "11"
-    }
-
-    buildFeatures {
-        viewBinding = true
     }
 }
 
@@ -48,8 +39,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-//    implementation(libs.quran.api)
-    implementation(project(":quran-api"))
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

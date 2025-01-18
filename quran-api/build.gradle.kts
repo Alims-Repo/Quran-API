@@ -1,9 +1,9 @@
-import java.util.Properties
+import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id("maven-publish")
+    id("com.vanniktech.maven.publish") version "0.28.0"
 }
 
 android {
@@ -49,6 +49,8 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
 
+    implementation("io.github.alims-repo:nc-base:0.3.5-alpha")
+
     implementation(libs.androidx.media)
     implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.exoplayer)
@@ -58,32 +60,40 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 }
 
-val credentialsProperties = Properties().apply {
-    val file = file("credentials.properties")
-    if (file.exists()) {
-        load(file.inputStream())
-    }
-}
+mavenPublishing {
+    coordinates(
+        groupId = "io.github.alims-repo",
+        artifactId = "quran-api",
+        version = "0.9.6-beta"
+    )
 
-publishing {
-    publications {
-        create<MavenPublication>("bar") {
-            groupId = "com.nelu"
-            artifactId = "quran-api"
-            version = "0.9.4-beta"
+    pom {
+        name.set("Quran API")
+        description.set("Quran API is a library that provides an easy way to access the Quran data.")
+        inceptionYear.set("2024")
+        url.set("https://github.com/Alims-Repo/Quran-API")
 
-            artifact("${buildDir}/outputs/aar/quran-api-release.aar")
-        }
-
-        repositories {
-            maven {
-                name = "GithubPackages"
-                url = uri("https://maven.pkg.github.com/Alims-Repo/Quran-API")
-                credentials {
-                    username = credentialsProperties.getProperty("gpr.user")
-                    password = credentialsProperties.getProperty("gpr.token")
-                }
+        licenses {
+            license {
+                name.set("GNU GENERAL PUBLIC LICENSE")
+                url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
             }
         }
+
+        developers {
+            developer {
+                id.set("alim")
+                name.set("Alim Sourav")
+                email.set("sourav.0.alim@gmail.com")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/Alims-Repo/Quran-API")
+        }
     }
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
 }

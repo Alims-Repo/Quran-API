@@ -1,9 +1,6 @@
 package com.nelu.quran_api.di
 
 import android.app.Application
-import android.content.ComponentName
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.session.MediaControllerCompat
 import com.nelu.quran_api.data.db.ImplJuz
 import com.nelu.quran_api.data.db.ImplQari
 import com.nelu.quran_api.data.db.ImplQuran
@@ -80,9 +77,14 @@ object QuranAPI : BaseAPI {
      * each repository with DAO instances for accessing Quranic data.
      *
      * @param app The application instance, used for context and file operations.
+     * @param purchaseCode The String, used for purchase validation.
      */
-    fun init(app: Application) {
+    fun init(app: Application, /* purchaseCode: String */) {
         app.run {
+//            PurchaseCodeValidator(
+//                this, purchaseCode,
+//                "https://codecanyon.net/user/nelu-code"
+//            )
             applicationContext.restoreData()
 
             // Initialize DAOs with the application context

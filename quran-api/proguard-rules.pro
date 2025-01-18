@@ -12,3 +12,4 @@
 }
 
 -dontwarn java.lang.invoke.StringConcatFactory
+-repackageclasses 'io.github.alims.quran.api'
