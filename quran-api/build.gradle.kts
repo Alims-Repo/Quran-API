@@ -64,7 +64,7 @@ mavenPublishing {
     coordinates(
         groupId = "io.github.alims-repo",
         artifactId = "quran-api",
-        version = "0.9.6-beta"
+        version = "0.9.8-beta"
     )
 
     pom {

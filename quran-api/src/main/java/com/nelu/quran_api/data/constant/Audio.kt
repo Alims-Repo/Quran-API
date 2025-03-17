@@ -14,7 +14,7 @@ object Audio {
     )
 
     fun Int.audioUrl() : Pair<String, String> {
-        val model = data.random().id
+        val model = data[2].id //data.random().id
         return Pair(
             model, "https://cdn.islamic.network/quran/audio/64/$model/$this.mp3"
         )

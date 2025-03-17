@@ -24,5 +24,11 @@ data class ModelQuran(
     val page: Int,
     val ayahInSurah: Int,
     val arabic: String,
-    val translation: List<String> = emptyList()
-)
+    val translation: List<ModelTranslationText> = emptyList()
+) {
+
+    data class ModelTranslationText(
+        val text: String,
+        val code: String
+    )
+}

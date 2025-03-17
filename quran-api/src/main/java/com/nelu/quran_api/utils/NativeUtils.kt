@@ -45,13 +45,23 @@ object NativeUtils {
      * @return A 2D array where each element is an array of strings representing the content of a file.
      */
     fun readQuranDataFromPaths(context: Context, fileNames: List<String>): Array<Array<String>> {
-        return readStringFromFileDescriptors(
-            fileNames.map { fileName ->
-                FileInputStream(File(context.filesDir, fileName)).fd
-            }.toTypedArray(),
-            fileNames.map { fileName ->
-                File(context.filesDir, fileName).length()
-            }.toLongArray()
-        )
+        // Open all FileInputStreams and retain references to prevent GC
+        val streams = fileNames.map { fileName ->
+            FileInputStream(File(context.filesDir, fileName))
+        }
+
+        // Extract file descriptors and file sizes
+        val fdArray = streams.map { it.fd }.toTypedArray()
+        val fileSizeArray = fileNames.map { fileName ->
+            File(context.filesDir, fileName).length()
+        }.toLongArray()
+
+        // Invoke native method to read data
+        val result = readStringFromFileDescriptors(fdArray, fileSizeArray)
+
+        // Close all streams after native operation completes
+        streams.forEach { it.close() }
+
+        return result
     }
 }

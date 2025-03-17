@@ -52,10 +52,13 @@ class AudioService : MediaSessionService() {
         player.clearMediaItems()
         concatenatingMediaSource.clear()
 
+        Log.e("Audio - $start", count.toString())
+
         repeat(count) { i->
             (i+start).audioUrl().let { audio->
+                Log.e("Audio", audio.toString())
                 addMediaItemWithBackgroundDownload(
-                    audio.first.replace(".", "_"), audio.second
+                    i, audio.first.replace(".", "_"), audio.second
                 )
             }
         }
@@ -75,30 +78,51 @@ class AudioService : MediaSessionService() {
         audioService = this
     }
 
-    private fun addMediaItemWithBackgroundDownload(name: String, url: String) {
+    private fun addMediaItemWithBackgroundDownload(index: Int, name: String, url: String) {
         concatenatingMediaSource.addMediaSource(
             ProgressiveMediaSource.Factory(
                 DefaultDataSource.Factory(this)
             ).createMediaSource(
                 checkFile(name, url)?.let { localPath->
+                    Log.e("Play Local", localPath.toString())
                     MediaItem.fromUri(localPath)
                 } ?: run {
+
                     scope.launch {
-                        downloadFile(name, url)?.let { localPath->
-                            val index = concatenatingMediaSource.size - 1
-                            val localMediaItem = MediaItem.fromUri(localPath)
-                            val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
-                                .createMediaSource(localMediaItem)
+                        downloadFile(name, url)?.let {
                             withContext(Dispatchers.Main) {
-                                concatenatingMediaSource.removeMediaSource(index)
-                                concatenatingMediaSource.addMediaSource(index, localMediaSource)
+                                replaceFile(index, it)
                             }
                         }
                     }
+//                    downloadFile(name, url)?.let { localPath->
+//                        val index = concatenatingMediaSource.size - 1
+//                        val localMediaItem = MediaItem.fromUri(localPath)
+//                        val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
+//                            .createMediaSource(localMediaItem)
+//                        withContext(Dispatchers.Main) {
+//                            concatenatingMediaSource.removeMediaSource(index)
+//                            concatenatingMediaSource.addMediaSource(index, localMediaSource)
+//                        }
+//                    }
+//                    Log.e("Play Online", url)
+//                    MediaItem.fromUri(url)
+                    Log.e("Play Cloud", url)
                     MediaItem.fromUri(url)
                 }
             )
         )
+    }
+
+    private fun replaceFile(index: Int, uri: Uri) {
+        if (player.currentMediaItemIndex < index) {
+            Log.e("Replace File $index", uri.toString())
+            val localMediaItem = MediaItem.fromUri(uri)
+            val localMediaSource = ProgressiveMediaSource.Factory(DefaultDataSource.Factory(this@AudioService))
+                .createMediaSource(localMediaItem)
+            concatenatingMediaSource.removeMediaSource(index)
+            concatenatingMediaSource.addMediaSource(index, localMediaSource)
+        }
     }
 
     private fun checkFile(name: String, url: String) : Uri? {
@@ -118,7 +142,6 @@ class AudioService : MediaSessionService() {
 
             file.parentFile?.mkdirs()
             file.writeBytes(URL(url).readBytes())
-
             return@withContext Uri.fromFile(file)
         } catch (e: Exception) {
             e.printStackTrace()

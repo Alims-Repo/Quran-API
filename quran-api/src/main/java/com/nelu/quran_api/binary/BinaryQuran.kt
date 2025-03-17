@@ -1,6 +1,7 @@
 package com.nelu.quran_api.binary
 
 import android.content.Context
+import android.util.Log
 import com.nelu.quran_api.data.model.ModelQuran
 import com.nelu.quran_api.utils.NativeUtils.readQuranDataFromPaths
 
@@ -19,6 +20,7 @@ import com.nelu.quran_api.utils.NativeUtils.readQuranDataFromPaths
 open class BinaryQuran(private val context: Context) : BinaryIndex(context) {
 
     // Cache of ModelQuran objects, preallocated for 6236 Ayahs
+    private val translations = ArrayList<String>()
     private val quran = ArrayList<ModelQuran>(6236)
 
     /**
@@ -33,28 +35,39 @@ open class BinaryQuran(private val context: Context) : BinaryIndex(context) {
      */
     fun quranList(translation: List<String>): List<ModelQuran> {
         // Return cached data if already populated
-        if (quran.isNotEmpty())
+        if (quran.isNotEmpty() && this.translations == translation) {
+            Log.e("Cache", translation.toString())
             return quran
+        }
 
+        quran.clear()
+
+        val local = context.filesDir.listFiles()?.map { it.name } ?: emptyList()
         // Prepare the list of files to load, starting with Arabic text, then adding translations
-        val translations = ArrayList<String>().also {
-            it.add("arabic.dat")
-            it.addAll(translation.map { "$it.dat" })
+        val translationFiles = mutableListOf("arabic.dat") + translation.map { "$it.dat" }.filter {
+            local.contains(it)
         }
 
         // Read Arabic and translation data from binary files
-        val bundledData = readQuranDataFromPaths(
-            context, translations
-        )
+        val bundledData = readQuranDataFromPaths(context, translationFiles)
 
-        // Extract translations (excluding the Arabic text)
-        val translationsData = bundledData.sliceArray(1 until bundledData.size)
-        val arabicData = bundledData[0]
+        // Ensure Arabic text is correctly assigned
+        val arabicData = bundledData.firstOrNull() ?: return emptyList()
+
+        // Extract translation data, ensuring indexes align with translation codes
+        val translationsData = bundledData.drop(1) // Excluding Arabic text
         val flatArray = getRawIndex()
+
+
+        // Ensure translations are mapped correctly
+        val translationMap = translationFiles.drop(1).associate { fileName ->
+            fileName.removeSuffix(".dat") to translationsData[translationFiles.indexOf(fileName) - 1]
+        }
 
         // Populate `quran` list with ModelQuran objects, combining metadata and text data
         for (i in flatArray.indices step 5) {
             val idIndex = flatArray[i] - 1
+
             quran.add(
                 ModelQuran(
                     id = idIndex + 1,
@@ -63,10 +76,18 @@ open class BinaryQuran(private val context: Context) : BinaryIndex(context) {
                     page = flatArray[i + 3],
                     ayahInSurah = flatArray[i + 4],
                     arabic = arabicData[idIndex],
-                    translation = translationsData.map { it[idIndex] },
+                    translation = translationMap.map { (code, data) ->
+                        ModelQuran.ModelTranslationText(
+                            text = data[idIndex], // Ensure correct mapping
+                            code = code
+                        )
+                    }
                 )
             )
         }
+
+        this.translations.clear()
+        this.translations.addAll(translation)
 
         return quran
     }

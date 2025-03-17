@@ -1,6 +1,7 @@
 package com.nelu.quran_api.di
 
 import android.app.Application
+import android.util.Log
 import com.nelu.quran_api.data.db.ImplJuz
 import com.nelu.quran_api.data.db.ImplQari
 import com.nelu.quran_api.data.db.ImplQuran
@@ -25,6 +26,10 @@ import com.nelu.quran_api.data.repository.base.BaseQuran
 import com.nelu.quran_api.data.repository.base.BaseSurah
 import com.nelu.quran_api.data.repository.base.BaseTranslation
 import com.nelu.quran_api.service.AudioService
+import com.nelu.quran_api.utils.NativeUtils
+import com.nelu.quran_api.utils.NativeUtils.readModelIndexListFromFileDescriptor
+import java.io.File
+import java.io.FileInputStream
 
 /**
  * # QuranAPI
@@ -101,6 +106,19 @@ object QuranAPI : BaseAPI {
         surah = RepositorySurah(daoSurah)
         quran = RepositoryQuran(daoQuran)
         audio = RepositoryAudio(daoQari)
+
+        val indexes = File(app.filesDir, "indexes.dat")
+
+        val index = readModelIndexListFromFileDescriptor(
+            FileInputStream(indexes).fd, indexes.length()
+        )
+
+        index.sorted().let {
+            Log.e("Index - size", it.size.toString())
+            Log.e("Index - min", it.min().toString())
+            Log.e("Index - max", it.max().toString())
+        }
+
         translation = RepositoryTranslation(app, daoTranslation)
     }
 }

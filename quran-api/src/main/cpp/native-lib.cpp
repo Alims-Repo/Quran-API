@@ -68,7 +68,7 @@ Java_com_nelu_quran_1api_utils_NativeUtils_readStringFromFileDescriptors(JNIEnv 
         // Create the inner array to store each string
         jobjectArray innerArray = env->NewObjectArray(listSize, stringClass, nullptr);
 
-        for (int j = 0; j < listSize; ++j) {
+        for (int j = 0; j < 6236; ++j) {
             // Bounds check before reading the string size
             if (offset + 4 > fileSizes[i]) {
                 LOGE("Unexpected end of file for element %d in file %d", j, i);

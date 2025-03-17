@@ -12,7 +12,7 @@ import com.nelu.quran_api.service.AudioController
 import com.nelu.quran_api.service.AudioService
 
 class RepositoryAudio(
-    val daoQari: DaoQari
+    private val daoQari: DaoQari
 ) : AudioController(daoQari.context), BaseAudio {
 
     override fun playAyah(ayah: Int, qari: String) {

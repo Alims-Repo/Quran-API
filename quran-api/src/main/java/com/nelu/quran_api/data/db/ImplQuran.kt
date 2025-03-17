@@ -47,7 +47,7 @@ class ImplQuran(
         return getQuranList(translations).filter { model ->
             model.arabic.lowercase().contains(lowerCaseQuery)
                     || model.translation.any { translationText ->
-                translationText.lowercase().contains(lowerCaseQuery)
+                translationText.text.lowercase().contains(lowerCaseQuery)
             }
         }
     }

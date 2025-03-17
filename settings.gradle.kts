@@ -1,9 +1,6 @@
 import java.util.Properties
 import kotlin.apply
 
-include(":nelu-license")
-
-
 pluginManagement {
     repositories {
         google {
